@@ -317,7 +317,7 @@ const CAMPAIGN_BASELINES = {
     baseAudienceSize: 12847,
     baseRevenueLow: 18400, baseRevenueHigh: 24200,
     baseOrdersLow: 340, baseOrdersHigh: 480,
-    baseROI: 2.8, baseTotalCost: 186.40, baseAOV: 52.40,
+    baseROI: 2.8, baseAOV: 52.40,
     channelCosts: { SMS: 0.015, Email: 0.003, Push: 0 },
     channelReach: { SMS: 0.716, Email: 0.887, Push: 0.475 },
     channelConversionRate: { SMS: 0.038, Email: 0.012, Push: 0.006 },
@@ -327,7 +327,7 @@ const CAMPAIGN_BASELINES = {
     baseAudienceSize: 4312,
     baseRevenueLow: 9800, baseRevenueHigh: 14600,
     baseOrdersLow: 210, baseOrdersHigh: 340,
-    baseROI: 2.2, baseTotalCost: 124.60, baseAOV: 48.20,
+    baseROI: 2.2, baseAOV: 48.20,
     channelCosts: { SMS: 0.015, Email: 0.003, Push: 0 },
     channelReach: { SMS: 0.881, Email: 0.950, Push: 0.510 },
     channelConversionRate: { SMS: 0.032, Email: 0.009, Push: 0.004 },
@@ -337,7 +337,7 @@ const CAMPAIGN_BASELINES = {
     baseAudienceSize: 890,
     baseRevenueLow: 6200, baseRevenueHigh: 8400,
     baseOrdersLow: 180, baseOrdersHigh: 260,
-    baseROI: 3.5, baseTotalCost: 42.80, baseAOV: 62.30,
+    baseROI: 3.5, baseAOV: 62.30,
     channelCosts: { SMS: 0.015, Email: 0.003, Push: 0 },
     channelReach: { SMS: 0.921, Email: 0.978, Push: 0.607 },
     channelConversionRate: { SMS: 0.042, Email: 0.018, Push: 0.008 },
@@ -625,7 +625,6 @@ export function CampaignPlan({ data, onBack }) {
     const revenueLow = ordersLow * aov;
     const revenueHigh = ordersHigh * aov;
     const roi = totalChannelCost > 0 ? ((revenueLow + revenueHigh) / 2) / totalChannelCost : 0;
-    const costPerConversion = totalConversions > 0 ? totalChannelCost / totalConversions : 0;
     const reactivated = Math.round(totalConversions * 0.35);
 
     const fmt = (n) => '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
