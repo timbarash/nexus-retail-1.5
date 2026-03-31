@@ -866,7 +866,7 @@ export function ReorderView({ data, onBack }) {
             <button
               onClick={() => setShowConfirm(true)}
               disabled={ordering || selected.size === 0}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-accent-blue to-[#2563EB] transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-accent-blue to-blue-600 transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 shadow-lg"
             >
               {ordering ? (
                 <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Submitting...</>
@@ -940,7 +940,7 @@ export function ExploreView({ data, onBack }) {
       <div className="relative rounded-2xl border border-blue-500/30 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-indigo-900/20 to-purple-900/40" />
         <div className="relative px-8 py-6">
-          <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-white/20 text-white/70 uppercase tracking-wider">Product Discovery</span>
+          <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-surface-border text-text-muted uppercase tracking-wider">Product Discovery</span>
           <h1 className="text-xl font-bold text-text-primary mt-2">{heroTitle}</h1>
           <p className="text-sm text-text-secondary mt-1">{heroSubtitle}</p>
         </div>
@@ -961,7 +961,7 @@ export function ExploreView({ data, onBack }) {
           {brandPerformance.map((b) => (
             <div key={b.name} className="flex items-center gap-3 py-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: b.color + '33' }}>
-                <span className="text-[10px] font-bold text-white">{b.name[0]}</span>
+                <span className="text-[10px] font-bold text-text-primary">{b.name[0]}</span>
               </div>
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
@@ -1039,7 +1039,7 @@ export function RecommendationsView({ data, onBack }) {
       <div className="relative rounded-2xl border border-green-500/30 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-900/40 via-emerald-900/20 to-teal-900/40" />
         <div className="relative px-8 py-6">
-          <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-white/20 text-white/70 uppercase tracking-wider">Smart Purchasing</span>
+          <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-surface-border text-text-muted uppercase tracking-wider">Smart Purchasing</span>
           <h1 className="text-xl font-bold text-text-primary mt-2">{heroTitle}</h1>
           <p className="text-sm text-text-secondary mt-1">{heroSubtitle}</p>
         </div>
@@ -1093,9 +1093,9 @@ function TypingIndicator() {
       </div>
       <div className="bg-surface-card border border-surface-border rounded-2xl rounded-tl-sm px-4 py-3">
         <div className="flex items-center gap-1.5">
-          <div className="w-2 h-2 rounded-full bg-[#8B949E] animate-bounce" style={{ animationDelay: '0ms' }} />
-          <div className="w-2 h-2 rounded-full bg-[#8B949E] animate-bounce" style={{ animationDelay: '150ms' }} />
-          <div className="w-2 h-2 rounded-full bg-[#8B949E] animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '300ms' }} />
         </div>
       </div>
     </div>
@@ -1374,7 +1374,7 @@ export default function ConnectAgent() {
     <div className="max-w-5xl mx-auto flex flex-col h-[calc(100vh-10rem)]">
       {/* header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-[#2563EB] flex items-center justify-center shadow-lg shadow-accent-blue/20">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-blue-600 flex items-center justify-center shadow-lg shadow-accent-blue/20">
           <ShoppingCart className="w-5 h-5 text-white" />
         </div>
         <div>
@@ -1460,7 +1460,7 @@ export default function ConnectAgent() {
                     <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${s.gradient} flex items-center justify-center`}>
                       <s.icon className="w-4 h-4 text-text-primary" />
                     </div>
-                    <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full border border-white/10" style={{ color: s.tagColor }}>{s.tag}</span>
+                    <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full border border-surface-border" style={{ color: s.tagColor }}>{s.tag}</span>
                     {s.confidence === 'high' && <span className="text-[9px] font-semibold text-accent-green bg-accent-green/10 px-1.5 py-0.5 rounded border border-accent-green/30">High Confidence</span>}
                     {s.confidence === 'medium' && <span className="text-[9px] font-semibold text-accent-gold bg-accent-gold/10 px-1.5 py-0.5 rounded border border-dashed border-accent-gold/30">Review Suggested</span>}
                   </div>
@@ -1487,13 +1487,13 @@ export default function ConnectAgent() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Ask about inventory, products, or purchasing..."
-            className="flex-1 bg-transparent text-sm text-text-primary placeholder-[#484F58] outline-none"
+            className="flex-1 bg-transparent text-sm text-text-primary placeholder-text-muted outline-none"
             disabled={view === 'typing'}
           />
           <button
             type="submit"
             disabled={!inputValue.trim() || view === 'typing'}
-            className="w-8 h-8 rounded-lg bg-accent-blue flex items-center justify-center text-white disabled:opacity-30 hover:bg-[#6FB4FF] transition-colors disabled:hover:bg-accent-blue"
+            className="w-8 h-8 rounded-lg bg-accent-blue flex items-center justify-center text-white disabled:opacity-30 hover:brightness-110 transition-colors disabled:hover:bg-accent-blue"
           >
             <Send className="w-4 h-4" />
           </button>

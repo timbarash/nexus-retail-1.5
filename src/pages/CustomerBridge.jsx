@@ -470,7 +470,7 @@ function Section({ title, icon: Icon, iconColor, children, defaultOpen = true, b
       <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2 px-5 py-3.5 hover:bg-surface-hover transition-colors">
         <Icon className="w-4.5 h-4.5 flex-shrink-0" style={{ color: iconColor }} />
         <h2 className="text-sm font-semibold text-text-primary">{title}</h2>
-        {badge && <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: (badgeColor || '#0EA5E9') + '18', color: badgeColor || '#0EA5E9' }}>{badge}</span>}
+        {badge && <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: (badgeColor || 'var(--color-accent-blue)') + '18', color: badgeColor || 'var(--color-accent-blue)' }}>{badge}</span>}
         <div className="ml-auto">{open ? <ChevronUp className="w-4 h-4 text-text-secondary" /> : <ChevronDown className="w-4 h-4 text-text-secondary" />}</div>
       </button>
       {open && <div className="px-5 pb-4 border-t border-surface-border pt-3">{children}</div>}
@@ -486,11 +486,11 @@ export function KBArticleCard({ article }) {
   const [expanded, setExpanded] = useState(false);
   const categoryColors = {
     Ecommerce: 'var(--color-accent-green)', POS: 'var(--color-accent-blue)', Payments: 'var(--color-accent-purple)', Compliance: 'var(--color-accent-gold)',
-    Integrations: '#0EA5E9', Marketing: '#EC4899', Operations: '#F97316',
+    Integrations: 'var(--color-accent-blue)', Marketing: '#EC4899', Operations: '#F97316',
     Troubleshooting: 'var(--color-accent-red)', Customization: '#8B5CF6', Analytics: 'var(--color-accent-green)',
-    'In-Store': '#0EA5E9', Advanced: '#8B949E', Premium: '#EC4899',
+    'In-Store': 'var(--color-accent-blue)', Advanced: 'var(--color-text-muted)', Premium: '#EC4899',
   };
-  const catColor = categoryColors[article.category] || '#0EA5E9';
+  const catColor = categoryColors[article.category] || 'var(--color-accent-blue)';
 
   return (
     <div className="bg-surface-bg rounded-lg border border-surface-border overflow-hidden">
@@ -557,7 +557,7 @@ export function KBArticleCard({ article }) {
                 {article.relatedArticles.map(id => {
                   const related = KNOWLEDGE_BASE.find(a => a.id === id);
                   return related ? (
-                    <span key={id} className="text-[10px] px-2 py-0.5 rounded bg-[#0EA5E9]/10 text-[#0EA5E9]">{related.title}</span>
+                    <span key={id} className="text-[10px] px-2 py-0.5 rounded bg-accent-blue/10 text-accent-blue">{related.title}</span>
                   ) : null;
                 })}
               </div>
@@ -608,8 +608,8 @@ function UpsellCard({ productKey, product, onActivate, onDemoRequest }) {
               <span className="text-xs text-text-primary font-medium">{product.monthlyFee}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5 text-[#0EA5E9]" />
-              <span className="text-xs text-[#0EA5E9]">{product.savings}</span>
+              <TrendingUp className="w-3.5 h-3.5 text-accent-blue" />
+              <span className="text-xs text-accent-blue">{product.savings}</span>
             </div>
           </div>
           {requested ? (
@@ -645,7 +645,7 @@ function UpsellCard({ productKey, product, onActivate, onDemoRequest }) {
               <div className="flex flex-wrap gap-2 mt-2">
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-surface-border text-text-primary">{product.tier}</span>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent-green/10 text-accent-green">{product.savings}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#0EA5E9]/10 text-[#0EA5E9]">{product.monthlyFee}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent-blue/10 text-accent-blue">{product.monthlyFee}</span>
               </div>
             </div>
           )}
@@ -686,16 +686,16 @@ export function BugReportCard({ userMessage, ticketId }) {
           </div>
           <div className="bg-surface-card rounded-lg p-3 border border-surface-border">
             <p className="text-[10px] text-text-muted">Status</p>
-            <p className="text-xs font-medium text-[#0EA5E9] flex items-center gap-1"><Clock className="w-3 h-3" /> In Queue</p>
+            <p className="text-xs font-medium text-accent-blue flex items-center gap-1"><Clock className="w-3 h-3" /> In Queue</p>
           </div>
           <div className="bg-surface-card rounded-lg p-3 border border-surface-border">
             <p className="text-[10px] text-text-muted">Est. Response</p>
             <p className="text-xs font-medium text-text-secondary">Within 4 hrs</p>
           </div>
         </div>
-        <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-[#0EA5E9]/5 border border-[#0EA5E9]/10">
-          <Sparkles className="w-3.5 h-3.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-[#0EA5E9]">We'll email you at <span className="font-medium">admin@ascendwellness.com</span> when an engineer picks this up. You can reference <span className="font-medium">{ticketId}</span> in any follow-up.</p>
+        <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-accent-blue/5 border border-accent-blue/10">
+          <Sparkles className="w-3.5 h-3.5 text-accent-blue flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-accent-blue">We'll email you at <span className="font-medium">admin@ascendwellness.com</span> when an engineer picks this up. You can reference <span className="font-medium">{ticketId}</span> in any follow-up.</p>
         </div>
       </div>
     </div>
@@ -949,9 +949,9 @@ function FeatureHelpCard({ userMessage, kbResults, onRequestForm }) {
     <div className="space-y-3">
       {kbResults.length > 0 && (
         <>
-          <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-[#0EA5E9]/5 border border-[#0EA5E9]/10">
-            <Sparkles className="w-3.5 h-3.5 text-[#0EA5E9] flex-shrink-0 mt-0.5" />
-            <p className="text-xs text-[#0EA5E9]">Some of what you're describing may already be available. Check the articles below — it might save you the wait!</p>
+          <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-accent-blue/5 border border-accent-blue/10">
+            <Sparkles className="w-3.5 h-3.5 text-accent-blue flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-accent-blue">Some of what you're describing may already be available. Check the articles below — it might save you the wait!</p>
           </div>
           {kbResults.map(article => (
             <KBArticleCard key={article.id} article={article} />
@@ -1005,7 +1005,7 @@ function FeatureDetailGatherer({ userMessage, onSubmit }) {
   };
 
   const priorities = [
-    { value: 'nice-to-have', label: 'Nice to Have', color: '#8B949E' },
+    { value: 'nice-to-have', label: 'Nice to Have', color: 'var(--color-text-muted)' },
     { value: 'important', label: 'Important', color: 'var(--color-accent-gold)' },
     { value: 'critical', label: 'Critical — Blocking Workflow', color: 'var(--color-accent-red)' },
   ];
@@ -1210,7 +1210,7 @@ function ProductCatalogPanel({ products, onToggle, isOpen, onClose }) {
     <div className={`fixed top-0 right-0 h-full w-80 bg-surface-bg border-l border-surface-border z-40 transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col shadow-2xl`}>
       <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
         <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-[#0EA5E9]" />
+          <Layers className="w-4 h-4 text-accent-blue" />
           <h2 className="text-sm font-semibold text-text-primary">Product Suite</h2>
         </div>
         <button onClick={onClose} className="p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-card/5 transition-colors">
@@ -1422,7 +1422,7 @@ function ReviewFeed({ data }) {
       {/* Header */}
       <div className="px-5 py-4 border-b border-surface-border flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-purple/20 to-[#0EA5E9]/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-purple/20 to-accent-blue/20 flex items-center justify-center">
             <MessageSquare className="w-4.5 h-4.5 text-accent-purple" />
           </div>
           <div>
@@ -1446,7 +1446,7 @@ function ReviewFeed({ data }) {
       </div>
 
       {/* Reviews */}
-      <div className="divide-y divide-[#30363D]">
+      <div className="divide-y divide-surface-border">
         {visible.length === 0 && (
           <div className="px-5 py-8 text-center">
             <p className="text-sm text-text-secondary">No reviews match those filters.</p>
@@ -1462,7 +1462,7 @@ function ReviewFeed({ data }) {
         {data.reviews.length > 5 && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="text-[10px] text-[#0EA5E9] hover:text-[#38BDF8] transition-colors flex items-center gap-1"
+            className="text-[10px] text-accent-blue hover:text-accent-blue/80 transition-colors flex items-center gap-1"
           >
             {showAll ? <><ChevronUp className="w-3 h-3" /> Show fewer</> : <><ChevronDown className="w-3 h-3" /> Show all {data.reviews.length} reviews</>}
           </button>
@@ -1499,7 +1499,7 @@ function ReviewCard({ review: r, scoreColor, sentBg }) {
         {r.title && <span className="font-semibold text-text-primary">{r.title} — </span>}
         &ldquo;{displayText}&rdquo;
         {isLong && (
-          <button onClick={() => setExpanded(!expanded)} className="text-[#0EA5E9] ml-1 hover:underline">
+          <button onClick={() => setExpanded(!expanded)} className="text-accent-blue ml-1 hover:underline">
             {expanded ? 'less' : 'more'}
           </button>
         )}
@@ -1665,7 +1665,7 @@ function SentimentSnippet({ data }) {
       {/* Header */}
       <div className="px-5 py-4 border-b border-surface-border flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-green/20 to-[#0EA5E9]/20 flex items-center justify-center">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-green/20 to-accent-blue/20 flex items-center justify-center">
             <Star className="w-4.5 h-4.5 text-accent-green" />
           </div>
           <div>
@@ -1759,8 +1759,8 @@ function SentimentSnippet({ data }) {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-border)" vertical={false} />
-              <XAxis dataKey="month" tick={{ fill: '#484F58', fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => v.split(' ')[0]} />
-              <YAxis domain={[-1, 1]} tick={{ fill: '#484F58', fontSize: 9 }} axisLine={false} tickLine={false} />
+              <XAxis dataKey="month" tick={{ fill: 'var(--color-text-muted)', fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => v.split(' ')[0]} />
+              <YAxis domain={[-1, 1]} tick={{ fill: 'var(--color-text-muted)', fontSize: 9 }} axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
               <Area type="monotone" dataKey="avg" name="Avg Score" stroke="var(--color-accent-green)" strokeWidth={2} fill="url(#sentGrad)" />
             </AreaChart>
@@ -1864,7 +1864,7 @@ function SentimentSnippet({ data }) {
             <div className="flex flex-wrap gap-1.5">
               {data.topWords.map((w, i) => {
                 const size = Math.max(11, Math.min(18, 11 + (w.value / data.topWords[0].value) * 7));
-                const colors = ['#0EA5E9', 'var(--color-accent-green)', 'var(--color-accent-purple)', 'var(--color-accent-gold)', '#EC4899', 'var(--color-accent-red)'];
+                const colors = ['var(--color-accent-blue)', 'var(--color-accent-green)', 'var(--color-accent-purple)', 'var(--color-accent-gold)', 'var(--color-accent-red)', 'var(--color-accent-red)'];
                 return (
                   <span
                     key={w.text}
@@ -1884,7 +1884,7 @@ function SentimentSnippet({ data }) {
         {data.focus === 'overview' && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1 mt-3 text-[10px] text-[#0EA5E9] hover:text-[#38BDF8] transition-colors"
+            className="flex items-center gap-1 mt-3 text-[10px] text-accent-blue hover:text-accent-blue/80 transition-colors"
           >
             {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             {expanded ? 'Show less' : 'Show brand & source breakdown'}
@@ -1991,10 +1991,10 @@ function generateReportData(query) {
   const categoryData = [
     { name: 'Pre-Rolls', revenue: Math.round(baseRevenue * 0.28), pct: 28, color: '#9333EA' },
     { name: 'Flower', revenue: Math.round(baseRevenue * 0.24), pct: 24, color: '#16A34A' },
-    { name: 'Vapes', revenue: Math.round(baseRevenue * 0.20), pct: 20, color: '#0EA5E9' },
+    { name: 'Vapes', revenue: Math.round(baseRevenue * 0.20), pct: 20, color: 'var(--color-accent-blue)' },
     { name: 'Edibles', revenue: Math.round(baseRevenue * 0.15), pct: 15, color: 'var(--color-accent-gold)' },
     { name: 'Concentrates', revenue: Math.round(baseRevenue * 0.08), pct: 8, color: 'var(--color-accent-red)' },
-    { name: 'Other', revenue: Math.round(baseRevenue * 0.05), pct: 5, color: '#8B949E' },
+    { name: 'Other', revenue: Math.round(baseRevenue * 0.05), pct: 5, color: 'var(--color-text-muted)' },
   ];
 
   // Location breakdown — matches alert narratives for consistency
@@ -2064,8 +2064,8 @@ function ReportSnippet({ data }) {
       {/* Header */}
       <div className="px-5 py-4 border-b border-surface-border flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#0EA5E9]/20 to-accent-green/20 flex items-center justify-center">
-            <BarChart3 className="w-4.5 h-4.5 text-[#0EA5E9]" />
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-green/20 flex items-center justify-center">
+            <BarChart3 className="w-4.5 h-4.5 text-accent-blue" />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-text-primary">Performance Report</h3>
@@ -2083,7 +2083,7 @@ function ReportSnippet({ data }) {
       <div className="grid grid-cols-4 gap-4 border-b border-surface-border px-4 py-1">
         {[
           { label: 'Revenue', value: formatCurrency(data.revenue), icon: DollarSign, color: 'var(--color-accent-green)' },
-          { label: 'Orders', value: data.orders.toLocaleString(), icon: ShoppingCart, color: '#0EA5E9' },
+          { label: 'Orders', value: data.orders.toLocaleString(), icon: ShoppingCart, color: 'var(--color-accent-blue)' },
           { label: 'Avg Order', value: `$${data.aov.toFixed(2)}`, icon: Tag, color: 'var(--color-accent-gold)' },
           { label: 'Growth', value: `${isPositive ? '+' : ''}${data.growthPct}%`, icon: TrendingUp, color: isPositive ? 'var(--color-accent-green)' : 'var(--color-accent-red)' },
         ].map(kpi => (
@@ -2105,20 +2105,20 @@ function ReportSnippet({ data }) {
             <AreaChart data={data.trendData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="reportGradCurrent" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#0EA5E9" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="#0EA5E9" stopOpacity={0} />
+                  <stop offset="0%" stopColor="var(--color-accent-blue)" stopOpacity={0.3} />
+                  <stop offset="100%" stopColor="var(--color-accent-blue)" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="reportGradPrev" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#8B949E" stopOpacity={0.15} />
-                  <stop offset="100%" stopColor="#8B949E" stopOpacity={0} />
+                  <stop offset="0%" stopColor="var(--color-text-muted)" stopOpacity={0.15} />
+                  <stop offset="100%" stopColor="var(--color-text-muted)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-border)" vertical={false} />
-              <XAxis dataKey="label" tick={{ fill: '#484F58', fontSize: 10 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#484F58', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v)} />
+              <XAxis dataKey="label" tick={{ fill: 'var(--color-text-muted)', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: 'var(--color-text-muted)', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v)} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="previous" name="Prior" stroke="#8B949E" strokeWidth={1.5} strokeDasharray="4 3" fill="url(#reportGradPrev)" />
-              <Area type="monotone" dataKey="current" name="Current" stroke="#0EA5E9" strokeWidth={2} fill="url(#reportGradCurrent)" />
+              <Area type="monotone" dataKey="previous" name="Prior" stroke="var(--color-text-muted)" strokeWidth={1.5} strokeDasharray="4 3" fill="url(#reportGradPrev)" />
+              <Area type="monotone" dataKey="current" name="Current" stroke="var(--color-accent-blue)" strokeWidth={2} fill="url(#reportGradCurrent)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -2169,7 +2169,7 @@ function ReportSnippet({ data }) {
               {data.locationData.map(loc => (
                 <div key={loc.name} className="bg-surface-card rounded-lg p-3 border border-surface-border">
                   <div className="flex items-center gap-1.5 mb-2">
-                    <MapPin className="w-3 h-3 text-[#0EA5E9]" />
+                    <MapPin className="w-3 h-3 text-accent-blue" />
                     <p className="text-xs font-medium text-text-primary">{loc.name}</p>
                   </div>
                   <div className="flex items-baseline gap-1.5">
@@ -2202,16 +2202,16 @@ function ReportSnippet({ data }) {
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-[#0EA5E9] w-12">You</span>
+                        <span className="text-[10px] text-accent-blue w-12">You</span>
                         <div className="flex-1 h-3 bg-surface-bg rounded-full overflow-hidden">
-                          <div className="h-full rounded-full bg-[#0EA5E9]" style={{ width: `${yoursWidth}%` }} />
+                          <div className="h-full rounded-full bg-accent-blue" style={{ width: `${yoursWidth}%` }} />
                         </div>
                         <span className="text-[10px] font-medium text-text-primary w-12 text-right">{m.format(m.yours)}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] text-text-secondary w-12">Market</span>
                         <div className="flex-1 h-3 bg-surface-bg rounded-full overflow-hidden">
-                          <div className="h-full rounded-full bg-[#8B949E]/50" style={{ width: `${marketWidth}%` }} />
+                          <div className="h-full rounded-full bg-text-muted/50" style={{ width: `${marketWidth}%` }} />
                         </div>
                         <span className="text-[10px] text-text-secondary w-12 text-right">{m.format(m.market)}</span>
                       </div>
@@ -2227,7 +2227,7 @@ function ReportSnippet({ data }) {
         {data.focus === 'overview' && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1 mt-3 text-[10px] text-[#0EA5E9] hover:text-[#38BDF8] transition-colors"
+            className="flex items-center gap-1 mt-3 text-[10px] text-accent-blue hover:text-accent-blue/80 transition-colors"
           >
             {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             {expanded ? 'Show less' : 'Show category breakdown'}
@@ -2275,9 +2275,9 @@ function ThinkingIndicator({ status }) {
           </div>
         ) : (
           <div className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-[#8B949E] animate-bounce" style={{ animationDelay: '0ms' }} />
-            <div className="w-2 h-2 rounded-full bg-[#8B949E] animate-bounce" style={{ animationDelay: '150ms' }} />
-            <div className="w-2 h-2 rounded-full bg-[#8B949E] animate-bounce" style={{ animationDelay: '300ms' }} />
+            <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '300ms' }} />
           </div>
         )}
       </div>
@@ -2297,7 +2297,7 @@ const SUGGESTIONS = [
     gradient: 'from-cyan-600/20 to-blue-600/20',
     border: 'hover:border-cyan-500/40',
     tag: 'Support',
-    tagColor: '#0EA5E9',
+    tagColor: 'var(--color-accent-blue)',
   },
   {
     key: 'whitelabel',
@@ -2353,27 +2353,27 @@ const SUGGESTIONS = [
 function getNexusActionData(action) {
   const A = {
     portfolio: { title:'Portfolio Summary', color:'var(--color-accent-gold)', summary:'Here\'s your portfolio overview across all 39 stores in 7 states.',
-      kpis:[{l:'Total Revenue',v:'$10.5M',c:'var(--color-accent-green)'},{l:'SSG',v:'+6.8%',c:'#0EA5E9'},{l:'OOS Lost Sales',v:'$112K',c:'var(--color-accent-red)'},{l:'Active Stores',v:'39',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Total Revenue',v:'$10.5M',c:'var(--color-accent-green)'},{l:'SSG',v:'+6.8%',c:'var(--color-accent-blue)'},{l:'OOS Lost Sales',v:'$112K',c:'var(--color-accent-red)'},{l:'Active Stores',v:'39',c:'var(--color-accent-purple)'}],
       cols:['State','Stores','Revenue (MTD)','Growth','Health'],
       rows:[['Illinois',8,'$2.4M','+9%',94],['New Jersey',5,'$1.7M','+7%',90],['Ohio',6,'$1.6M','+5%',86],['Pennsylvania',5,'$1.3M','+6%',88],['Massachusetts',4,'$1.2M','+4%',85],['Maryland',4,'$1.1M','+3%',84],['Michigan',7,'$1.1M','-4%',62]],
       actions:[{label:'View State Details',done:'Showing state breakdown'},{label:'Export Report',done:'Report downloaded'}]},
     revenue_state: { title:'State Revenue Comparison', color:'var(--color-accent-green)', summary:'Revenue breakdown across all 7 states — current month vs prior.',
-      kpis:[{l:'Total MTD',v:'$10.50M',c:'var(--color-accent-green)'},{l:'vs Prior',v:'+$960K',c:'#0EA5E9'},{l:'Top State',v:'Illinois',c:'var(--color-accent-gold)'},{l:'Fastest Growth',v:'New Jersey',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Total MTD',v:'$10.50M',c:'var(--color-accent-green)'},{l:'vs Prior',v:'+$960K',c:'var(--color-accent-blue)'},{l:'Top State',v:'Illinois',c:'var(--color-accent-gold)'},{l:'Fastest Growth',v:'New Jersey',c:'var(--color-accent-purple)'}],
       cols:['State','Current MTD','Prior Month','Delta','% Change'],
       rows:[['New Jersey','$1.71M','$1.45M','+$260K','+18%'],['Ohio','$1.62M','$1.41M','+$210K','+15%'],['Illinois','$2.41M','$2.15M','+$260K','+12%'],['Maryland','$1.12M','$1.01M','+$110K','+11%'],['Massachusetts','$1.22M','$1.12M','+$100K','+9%'],['Pennsylvania','$1.32M','$1.25M','+$70K','+6%'],['Michigan','$1.10M','$1.15M','-$50K','-4%']],
       actions:[{label:'Export CSV',done:'CSV downloaded'},{label:'Email to VPs',done:'Sent to 3 VPs'}]},
     compliance_all: { title:'Operational Health — All States', color:'var(--color-accent-green)', summary:'System health and sync status across all 7 states at a glance.',
-      kpis:[{l:'States Online',v:'6/7',c:'var(--color-accent-green)'},{l:'Needs Attention',v:'1',c:'var(--color-accent-gold)'},{l:'Total Stores',v:'39',c:'#0EA5E9'},{l:'Uptime',v:'99.8%',c:'var(--color-accent-green)'}],
+      kpis:[{l:'States Online',v:'6/7',c:'var(--color-accent-green)'},{l:'Needs Attention',v:'1',c:'var(--color-accent-gold)'},{l:'Total Stores',v:'39',c:'var(--color-accent-blue)'},{l:'Uptime',v:'99.8%',c:'var(--color-accent-green)'}],
       cols:['State','Stores','Status','Last Updated','Uptime','Next Review'],
       rows:[['Illinois',8,'All Good','2 min ago','100%','Apr 15'],['Michigan',7,'All Good','5 min ago','99.9%','May 1'],['Ohio',6,'All Good','3 min ago','100%','Apr 22'],['Pennsylvania',5,'Review','47 min ago','98.2%','Mar 28'],['New Jersey',5,'All Good','8 min ago','100%','Apr 10'],['Maryland',4,'All Good','1 min ago','100%','May 15'],['Massachusetts',4,'All Good','4 min ago','99.9%','Apr 5']],
       actions:[{label:'View PA Details',done:'Showing PA sync history'},{label:'Export Status',done:'Report downloaded'}]},
     brand_perf: { title:'Brand Performance Rankings', color:'var(--color-accent-purple)', summary:'Top brands across all stores by revenue contribution this month.',
-      kpis:[{l:'Top Brand',v:'Jeeter',c:'var(--color-accent-green)'},{l:'Highest Margin',v:'Wyld (45%)',c:'var(--color-accent-gold)'},{l:'Fastest Growth',v:'Jeeter (+22%)',c:'#0EA5E9'},{l:'Brands Tracked',v:'48',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Top Brand',v:'Jeeter',c:'var(--color-accent-green)'},{l:'Highest Margin',v:'Wyld (45%)',c:'var(--color-accent-gold)'},{l:'Fastest Growth',v:'Jeeter (+22%)',c:'var(--color-accent-blue)'},{l:'Brands Tracked',v:'48',c:'var(--color-accent-purple)'}],
       cols:['Rank','Brand','Category','Revenue','Units','Margin','Trend'],
       rows:[['#1','Jeeter','Pre-Rolls','$1.42M','31.2K','42%','+22%'],['#2','STIIIZY','Vapes','$1.18M','18.4K','42%','+15%'],['#3','Wyld','Edibles','$892K','44.6K','45%','+18%'],['#4','Raw Garden','Concentrates','$764K','12.1K','36%','+9%'],['#5','Kiva','Edibles','$651K','29.8K','44%','+12%'],['#6','Cookies','Flower','$598K','8.9K','40%','-3%']],
       actions:[{label:'View Reorder Options',done:'Showing reorder details for top brands'},{label:'Export Rankings',done:'CSV downloaded'}]},
     rankings: { title:'Store Performance Rankings', color:'var(--color-accent-green)', summary:'All stores in IL, MI, OH ranked by composite performance score.',
-      kpis:[{l:'Top Store',v:'Logan Square',c:'var(--color-accent-green)'},{l:'Avg Score',v:'78/100',c:'#0EA5E9'},{l:'Region Revenue',v:'$5.94M',c:'var(--color-accent-gold)'},{l:'Declining',v:'3 MI stores',c:'var(--color-accent-red)'}],
+      kpis:[{l:'Top Store',v:'Logan Square',c:'var(--color-accent-green)'},{l:'Avg Score',v:'78/100',c:'var(--color-accent-blue)'},{l:'Region Revenue',v:'$5.94M',c:'var(--color-accent-gold)'},{l:'Declining',v:'3 MI stores',c:'var(--color-accent-red)'}],
       cols:['Rank','Store','State','Revenue','vs Forecast','Score'],
       rows:[['#1','Ascend Logan Square','IL','$412K','+22%',96],['#2','Ascend River North','IL','$388K','+8%',94],['#3','Ascend Springfield','IL','$367K','+18%',91],['#4','Ascend Columbus','OH','$351K','+5%',88],['#5','Ascend Schaumburg','IL','$342K','+3%',85],['#6','Ascend Ann Arbor','MI','$284K','-18%',62],['#7','Ascend Grand Rapids','MI','$261K','-15%',58],['#8','Ascend Morenci','MI','$198K','-23%',48]],
       actions:[{label:'View Bottom Stores',done:'Showing Ann Arbor, Grand Rapids, Morenci details'},{label:'Export Rankings',done:'CSV downloaded'}]},
@@ -2383,7 +2383,7 @@ function getNexusActionData(action) {
       rows:[['Ascend Schaumburg','IL','OUT OF STOCK','0 units','Receive from Logan Sq'],['Ascend Canton','OH','OUT OF STOCK','0 units','Receive from Columbus'],['Ascend Springfield','IL','OUT OF STOCK','0 units','Receive from River North'],['Ascend Kalamazoo','MI','OUT OF STOCK','0 units','Receive from Ann Arbor'],['Ascend Logan Square','IL','SURPLUS','124 units','Transfer 40 → Schaumburg'],['Ascend River North','IL','SURPLUS','98 units','Transfer 35 → Springfield'],['Ascend Columbus','OH','SURPLUS','87 units','Transfer 30 → Canton']],
       actions:[{label:'View Transfer Details',done:'Showing transfer breakdown by store'},{label:'Export Report',done:'Report downloaded'}]},
     compare: { title:'IL vs OH Revenue Comparison', color:'var(--color-accent-gold)', summary:'Side-by-side comparison of Illinois and Ohio revenue metrics this month.',
-      kpis:[{l:'IL Revenue',v:'$2.41M',c:'var(--color-accent-green)'},{l:'OH Revenue',v:'$1.62M',c:'#0EA5E9'},{l:'IL Lead',v:'+$790K',c:'var(--color-accent-gold)'},{l:'OH Faster Growth',v:'+15%',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'IL Revenue',v:'$2.41M',c:'var(--color-accent-green)'},{l:'OH Revenue',v:'$1.62M',c:'var(--color-accent-blue)'},{l:'IL Lead',v:'+$790K',c:'var(--color-accent-gold)'},{l:'OH Faster Growth',v:'+15%',c:'var(--color-accent-purple)'}],
       cols:['Metric','Illinois','Ohio','Delta'],
       rows:[['Total Revenue','$2.41M','$1.62M','+$790K (IL)'],['Total Orders','24,812','16,541','+8,271 (IL)'],['Avg Order Value','$97.10','$98.00','+$0.90 (OH)'],['Growth vs Prior','+12%','+15%','+3% (OH)'],['Store Count','8','6','+2 (IL)'],['Rev per Store','$301K','$270K','+$31K (IL)']],
       actions:[{label:'View Full Comparison',done:'Showing detailed breakdown'},{label:'Export Report',done:'Report downloaded'}]},
@@ -2393,7 +2393,7 @@ function getNexusActionData(action) {
       rows:[['Happy Hour 4-6pm','River North (IL)','+18% AOV','12 stores','High'],['Budtender Rec Display','Ann Arbor (MI)','+23% attach rate','8 stores','High'],['Text-Before-Pickup','Columbus (OH)','-40% wait time','15 stores','Medium'],['Weekend Loyalty 2x Pts','Logan Square (IL)','+31% Sat volume','21 stores','Medium'],['New Arrivals Endcap','Edison (NJ)','+15% new SKU trial','18 stores','Low']],
       actions:[{label:'View Practice Details',done:'Showing implementation details'},{label:'Export Playbook',done:'Playbook PDF downloaded'}]},
     transfers: { title:'Pending Vault Transfers — Illinois', color:'var(--color-accent-gold)', summary:'6 inter-store vault transfers for IL — 3 awaiting your approval.',
-      kpis:[{l:'Pending Approval',v:'3',c:'var(--color-accent-gold)'},{l:'In Transit',v:'2',c:'#0EA5E9'},{l:'Delivered Today',v:'1',c:'var(--color-accent-green)'},{l:'Total Value',v:'$18.4K',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Pending Approval',v:'3',c:'var(--color-accent-gold)'},{l:'In Transit',v:'2',c:'var(--color-accent-blue)'},{l:'Delivered Today',v:'1',c:'var(--color-accent-green)'},{l:'Total Value',v:'$18.4K',c:'var(--color-accent-purple)'}],
       cols:['Transfer ID','From','To','Product','Qty','Status','METRC Tag'],
       rows:[['VT-4821','Logan Square','Schaumburg','Blue Dream 3.5g',40,'Awaiting Approval','1A40..3921'],['VT-4822','River North','Springfield','Blue Dream 3.5g',35,'Awaiting Approval','1A40..3922'],['VT-4818','River North','Naperville','Jeeter Baby Js 5pk',60,'In Transit','1A40..3918'],['VT-4815','Naperville','Schaumburg','Wyld Gummies 10pk',80,'In Transit','1A40..3915'],['VT-4810','Logan Square','Peoria','STIIIZY Pod 1g',24,'Awaiting Approval','1A40..3910'],['VT-4808','Springfield','Champaign','Kiva Camino 20pk',48,'Delivered','1A40..3908']],
       actions:[{label:'View Pending Details',done:'Showing pending transfer details'},{label:'Export Manifests',done:'Manifest PDFs downloaded'}]},
@@ -2403,7 +2403,7 @@ function getNexusActionData(action) {
       rows:[['9:00 AM','River North','Jeeter','12 SKUs','Delivered','PO-8821'],['10:30 AM','Logan Square','STIIIZY','8 SKUs','Delivered','PO-8819'],['12:00 PM','Naperville','Wyld','6 SKUs','In Transit','PO-8825'],['1:30 PM','Schaumburg','Kiva','10 SKUs','Scheduled','PO-8830'],['3:00 PM','Springfield','Raw Garden','5 SKUs','Scheduled','PO-8832']],
       actions:[{label:'View Delivery Details',done:'Showing full delivery manifest'},{label:'Export Schedule',done:'Schedule downloaded'}]},
     close: { title:'Daily Close Reports — Illinois', color:'var(--color-accent-green)', summary:'Yesterday\'s close summaries for all 8 Illinois stores.',
-      kpis:[{l:'Total Revenue',v:'$303.6K',c:'var(--color-accent-green)'},{l:'Total Orders',v:'3,090',c:'#0EA5E9'},{l:'Balanced',v:'6/8',c:'var(--color-accent-gold)'},{l:'Needs Review',v:'2',c:'var(--color-accent-red)'}],
+      kpis:[{l:'Total Revenue',v:'$303.6K',c:'var(--color-accent-green)'},{l:'Total Orders',v:'3,090',c:'var(--color-accent-blue)'},{l:'Balanced',v:'6/8',c:'var(--color-accent-gold)'},{l:'Needs Review',v:'2',c:'var(--color-accent-red)'}],
       cols:['Store','Revenue','Orders','Cash Collected','Variance','Status'],
       rows:[['Logan Square','$48.2K','492','$10.4K','$0','Balanced'],['River North','$48.2K','494','$10.1K','$0','Balanced'],['Springfield','$32.6K','332','$7.2K','$0','Balanced'],['Naperville','$28.4K','289','$6.1K','$0','Balanced'],['Schaumburg','$41.5K','418','$8.9K','+$47','Review'],['Arl. Heights','$24.8K','252','$5.4K','-$12','Review'],['Peoria','$28.4K','289','$6.1K','$0','Balanced'],['Bloomington','$21.2K','216','$4.6K','$0','Balanced']],
       actions:[{label:'View Variances',done:'Showing Schaumburg (+$47) & Arlington Heights (-$12) details'},{label:'Export Close Report',done:'PDF downloaded'}]},
@@ -2413,12 +2413,12 @@ function getNexusActionData(action) {
       rows:[['Logan Square',16,16,'0 hrs','$4.91','94%'],['River North',18,18,'2.1 hrs','$4.82','92%'],['Springfield',10,10,'3.5 hrs','$5.48','87%'],['Naperville',13,15,'0 hrs','$5.42','82%'],['Schaumburg',11,14,'12.6 hrs','$6.18','76%'],['Peoria',9,10,'0 hrs','$5.61','85%']],
       actions:[{label:'View Schaumburg Details',done:'Showing Schaumburg staffing breakdown'},{label:'Export Labor Report',done:'Report downloaded'}]},
     vault_transfer: { title:'Vault-to-Floor Transfer Queue', color:'var(--color-accent-blue)', summary:'7 items in your vault ready for floor replenishment at Logan Square.',
-      kpis:[{l:'Critical',v:'3 SKUs',c:'var(--color-accent-red)'},{l:'High',v:'1 SKU',c:'var(--color-accent-gold)'},{l:'Total to Move',v:'108 units',c:'#0EA5E9'},{l:'Est. Time',v:'~25 min',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Critical',v:'3 SKUs',c:'var(--color-accent-red)'},{l:'High',v:'1 SKU',c:'var(--color-accent-gold)'},{l:'Total to Move',v:'108 units',c:'var(--color-accent-blue)'},{l:'Est. Time',v:'~25 min',c:'var(--color-accent-purple)'}],
       cols:['Product','In Vault','On Floor','Restock Qty','Urgency'],
       rows:[['Blue Dream 3.5g',124,3,20,'Critical'],['Jeeter Baby Js 5pk',88,5,15,'High'],['STIIIZY OG Pod 1g',56,2,12,'Critical'],['Wyld Elderberry 10pk',200,8,25,'Medium'],['Kiva Camino 20pk',144,6,18,'Medium'],['Raw Garden Sauce 1g',42,1,10,'Critical'],['Cookies Gary Payton 3.5g',36,4,8,'Low']],
       actions:[{label:'View Pull List',done:'Showing prioritized pull list'},{label:'Export List',done:'Pull list downloaded'}]},
     sync_status: { title:'Inventory Sync Overview', color:'var(--color-accent-green)', summary:'Live inventory sync health across all state systems.',
-      kpis:[{l:'Systems Online',v:'6/7',c:'var(--color-accent-green)'},{l:'Needs Attention',v:'1 (PA)',c:'var(--color-accent-gold)'},{l:'Total Products',v:'56,400',c:'#0EA5E9'},{l:'Accuracy',v:'99.7%',c:'var(--color-accent-green)'}],
+      kpis:[{l:'Systems Online',v:'6/7',c:'var(--color-accent-green)'},{l:'Needs Attention',v:'1 (PA)',c:'var(--color-accent-gold)'},{l:'Total Products',v:'56,400',c:'var(--color-accent-blue)'},{l:'Accuracy',v:'99.7%',c:'var(--color-accent-green)'}],
       cols:['State','System','Last Updated','Status','Products Tracked','Accuracy'],
       rows:[['Illinois','METRC','2 min ago','All Good','12,481','100%'],['Michigan','METRC','5 min ago','All Good','9,842','99.9%'],['Ohio','METRC','3 min ago','All Good','8,215','100%'],['Pennsylvania','MJ Freeway','47 min ago','Review','6,932','97.8%'],['New Jersey','METRC','8 min ago','All Good','7,621','100%'],['Maryland','METRC','1 min ago','All Good','5,418','100%'],['Massachusetts','METRC','4 min ago','All Good','5,891','99.9%']],
       actions:[{label:'View PA Details',done:'Showing Pennsylvania sync details'},{label:'Export Status Report',done:'Report downloaded'}]},
@@ -2428,7 +2428,7 @@ function getNexusActionData(action) {
       rows:[['EX-291','Scranton (PA)','Jeeter Infused 1g',24,22,-2,'3 days','Urgent'],['EX-289','Scranton (PA)','Wyld CBN Pear 10pk',48,50,+2,'3 days','Urgent'],['EX-287','Reading (PA)','STIIIZY Pod 0.5g',12,10,-2,'5 days','Urgent'],['EX-285','Ann Arbor (MI)','Kiva Terra Bites',36,35,-1,'2 days','Standard'],['EX-283','Detroit (MI)','Raw Garden Cart 1g',18,19,+1,'1 day','Low'],['EX-280','Edison (NJ)','Cookies Flower 3.5g',8,9,+1,'4 days','Standard']],
       actions:[{label:'View Urgent Items',done:'Showing PA exception details'},{label:'Export Exceptions',done:'Report downloaded'}]},
     audit: { title:'Store Readiness Score — Illinois', color:'var(--color-accent-green)', summary:'Operational readiness checklist across all 8 IL stores.',
-      kpis:[{l:'Overall Score',v:'96%',c:'var(--color-accent-green)'},{l:'Checks Passing',v:'6/7',c:'#0EA5E9'},{l:'To-Do Items',v:'3',c:'var(--color-accent-gold)'},{l:'Next Review',v:'Apr 15',c:'var(--color-accent-blue)'}],
+      kpis:[{l:'Overall Score',v:'96%',c:'var(--color-accent-green)'},{l:'Checks Passing',v:'6/7',c:'var(--color-accent-blue)'},{l:'To-Do Items',v:'3',c:'var(--color-accent-gold)'},{l:'Next Review',v:'Apr 15',c:'var(--color-accent-blue)'}],
       cols:['Area','Status','Score','Stores Passing','Notes'],
       rows:[['Product accuracy','Pass','99.8%','8/8','All good'],['Documentation','Pass','100%','8/8','All filed'],['Waste tracking','Pass','98.5%','7/8','Peoria — 2 pending'],['Vault accuracy','Review','97.2%','6/8','Springfield, Champaign need cycle count'],['Team credentials','Pass','100%','8/8','All current'],['Camera systems','Pass','99.9%','8/8','1 replaced last week'],['Visitor tracking','Pass','100%','8/8','Digital logs active']],
       actions:[{label:'View Details',done:'Showing readiness breakdown'},{label:'Export Report',done:'Readiness report downloaded'}]},
@@ -2438,17 +2438,17 @@ function getNexusActionData(action) {
       rows:[['Apr 1','Illinois','New potency testing for edibles','High','Update vendor process'],['Apr 15','New Jersey','Delivery license expansion','Medium','Evaluate delivery ops'],['May 1','Pennsylvania','System API v3 migration','High','Dev team integration update'],['May 15','Ohio','Updated THC labeling requirements','Medium','Audit current labels'],['Jun 1','Maryland','Updated packaging requirements','Medium','Review current packaging']],
       actions:[{label:'View Upcoming Changes',done:'Showing regulatory timeline'},{label:'Export Calendar',done:'Calendar exported'}]},
     winback_campaign: { title:'Win-Back Campaign — Lapsed Customers', color:'var(--color-accent-green)', summary:'Customers inactive 60+ days with high lifetime value, ready for re-engagement.',
-      kpis:[{l:'Lapsed (60d+)',v:'1,247',c:'var(--color-accent-red)'},{l:'Avg LTV',v:'$2,840',c:'var(--color-accent-green)'},{l:'Win-Back Rate',v:'23%',c:'var(--color-accent-gold)'},{l:'Est. Revenue',v:'$89K',c:'#0EA5E9'}],
+      kpis:[{l:'Lapsed (60d+)',v:'1,247',c:'var(--color-accent-red)'},{l:'Avg LTV',v:'$2,840',c:'var(--color-accent-green)'},{l:'Win-Back Rate',v:'23%',c:'var(--color-accent-gold)'},{l:'Est. Revenue',v:'$89K',c:'var(--color-accent-blue)'}],
       cols:['Customer Segment','Count','Avg Last Visit','Avg LTV','Top Category','Recommended Channel'],
       rows:[['High-Value VIP (>$5K LTV)',142,'72 days','$6,420','Flower','SMS + $25 credit'],['Regular Weekly (was 1x/wk)',384,'68 days','$3,180','Vapes','Email + 20% off'],['Monthly Bulk Buyers',218,'91 days','$2,650','Edibles','Push + BOGO'],['New-ish (3-6 purchases)',503,'85 days','$890','Pre-rolls','SMS + first-timer bundle']],
       actions:[{label:'View Campaign Plan',done:'Showing win-back campaign details'},{label:'Export Audience',done:'Audience list downloaded'}]},
     market_prices: { title:'Price vs Market Comparison', color:'var(--color-accent-gold)', summary:'Your top sellers compared to competitor and market average pricing.',
-      kpis:[{l:'Below Market',v:'12',c:'var(--color-accent-green)'},{l:'At Market',v:'18',c:'#0EA5E9'},{l:'Above Market',v:'6',c:'var(--color-accent-red)'},{l:'Avg Gap',v:'-3.2%',c:'var(--color-accent-green)'}],
+      kpis:[{l:'Below Market',v:'12',c:'var(--color-accent-green)'},{l:'At Market',v:'18',c:'var(--color-accent-blue)'},{l:'Above Market',v:'6',c:'var(--color-accent-red)'},{l:'Avg Gap',v:'-3.2%',c:'var(--color-accent-green)'}],
       cols:['Product','Your Price','Market Avg','Competitor Low','Gap','Recommendation'],
       rows:[['Blue Dream 3.5g','$38','$42','$35','-9.5%','At optimal'],['STIIIZY OG Pod 1g','$45','$48','$42','-6.3%','At optimal'],['Wyld Elderberry 10pk','$18','$20','$16','-10%','At optimal'],['Jeeter Baby Js 5pk','$35','$38','$33','-7.9%','At optimal'],['Kiva Camino 20pk','$22','$24','$20','-8.3%','At optimal'],['Raw Garden Sauce 1g','$28','$32','$25','-12.5%','Opportunity to raise']],
       actions:[{label:'View Price Details',done:'Showing full price comparison'},{label:'Export Analysis',done:'Price analysis downloaded'}]},
     sentiment_overview: { title:'Customer Sentiment — This Month', color:'var(--color-accent-purple)', summary:'Aggregated feedback from reviews, surveys, and support interactions.',
-      kpis:[{l:'NPS Score',v:'72',c:'var(--color-accent-green)'},{l:'Avg Rating',v:'4.6★',c:'var(--color-accent-gold)'},{l:'Reviews',v:'348',c:'#0EA5E9'},{l:'Trend',v:'+5 pts',c:'var(--color-accent-green)'}],
+      kpis:[{l:'NPS Score',v:'72',c:'var(--color-accent-green)'},{l:'Avg Rating',v:'4.6★',c:'var(--color-accent-gold)'},{l:'Reviews',v:'348',c:'var(--color-accent-blue)'},{l:'Trend',v:'+5 pts',c:'var(--color-accent-green)'}],
       cols:['Theme','Mentions','Sentiment','Trend','Sample Feedback'],
       rows:[['Product Quality',89,'Positive','Balanced','Great flower selection, always fresh'],['Wait Times',64,'Warning','Review','Line was long on Saturday, but staff was friendly'],['Staff Knowledge',52,'Positive','Balanced','Budtender knew exactly what I needed'],['Price Value',47,'Warning','Review','Prices higher than shop down the street'],['Online Ordering',38,'Positive','Balanced','Pickup was super smooth, ready in 10 min']],
       actions:[{label:'View All Feedback',done:'Showing full sentiment breakdown'},{label:'Export Report',done:'Sentiment report downloaded'}]},
@@ -2458,22 +2458,22 @@ function getNexusActionData(action) {
       rows:[['River North','$2.8K','$410','$180','$3.39K','0.28%'],['Logan Square','$3.1K','$620','$340','$4.06K','0.41%'],['Naperville','$4.2K','$890','$510','$5.60K','0.62%'],['Ann Arbor','$2.4K','$310','$120','$2.83K','0.31%'],['Columbus','$3.6K','$480','$290','$4.37K','0.52%'],['Edison','$2.1K','$280','$90','$2.47K','0.24%']],
       actions:[{label:'View Naperville Details',done:'Showing Naperville shrinkage breakdown'},{label:'Export Report',done:'Shrinkage report downloaded'}]},
     category_mix: { title:'Category Mix & Trends', color:'var(--color-accent-purple)', summary:'Product category revenue share and movement trends across the portfolio.',
-      kpis:[{l:'Top Category',v:'Flower (28%)',c:'var(--color-accent-green)'},{l:'Fastest Growing',v:'Pre-Rolls (+22%)',c:'#0EA5E9'},{l:'Declining',v:'Vapes (-3%)',c:'var(--color-accent-red)'},{l:'Categories',v:'8',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Top Category',v:'Flower (28%)',c:'var(--color-accent-green)'},{l:'Fastest Growing',v:'Pre-Rolls (+22%)',c:'var(--color-accent-blue)'},{l:'Declining',v:'Vapes (-3%)',c:'var(--color-accent-red)'},{l:'Categories',v:'8',c:'var(--color-accent-purple)'}],
       cols:['Category','Revenue','Share','vs Prior Month','Units Sold','Avg Price'],
       rows:[['Flower','$3.1M','28%','+5%','71.2K','$43.50'],['Vapes','$2.4M','21%','-3%','39.8K','$60.30'],['Edibles','$2.1M','19%','+12%','95.4K','$22.00'],['Pre-Rolls','$1.8M','16%','+22%','41.6K','$43.27'],['Concentrates','$1.2M','11%','+8%','15.2K','$78.95'],['Tinctures','$0.6M','5%','+4%','12.8K','$46.88']],
       actions:[{label:'View Category Details',done:'Showing full category breakdown'},{label:'Export Report',done:'Category report downloaded'}]},
     budtender_perf: { title:'Budtender Performance — Logan Square', color:'var(--color-accent-green)', summary:'Individual budtender metrics for this store this month.',
-      kpis:[{l:'Top Seller',v:'Maria G.',c:'var(--color-accent-green)'},{l:'Avg AOV',v:'$97.40',c:'var(--color-accent-gold)'},{l:'Attach Rate',v:'2.4 items',c:'#0EA5E9'},{l:'Staff',v:'16',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Top Seller',v:'Maria G.',c:'var(--color-accent-green)'},{l:'Avg AOV',v:'$97.40',c:'var(--color-accent-gold)'},{l:'Attach Rate',v:'2.4 items',c:'var(--color-accent-blue)'},{l:'Staff',v:'16',c:'var(--color-accent-purple)'}],
       cols:['Budtender','Transactions','Revenue','AOV','Items/Basket','Upsell Rate'],
       rows:[['Maria G.',412,'$48.2K','$117.00','3.1','34%'],['James T.',388,'$41.6K','$107.20','2.8','28%'],['Aisha K.',365,'$38.9K','$106.60','2.6','25%'],['Devon R.',341,'$33.4K','$97.90','2.3','21%'],['Priya S.',298,'$26.1K','$87.60','2.1','16%'],['Mike L.',275,'$22.8K','$82.90','1.9','12%']],
       actions:[{label:'View All Budtenders',done:'Showing full team breakdown'},{label:'Export Report',done:'Performance report downloaded'}]},
     daily_flash: { title:'Daily Flash Report — Today', color:'var(--color-accent-gold)', summary:'Real-time sales snapshot across the portfolio for today so far.',
-      kpis:[{l:'Today So Far',v:'$198K',c:'var(--color-accent-green)'},{l:'vs Same Day LW',v:'+4.1%',c:'#0EA5E9'},{l:'Orders',v:'1,847',c:'var(--color-accent-gold)'},{l:'Avg Basket',v:'$107.20',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Today So Far',v:'$198K',c:'var(--color-accent-green)'},{l:'vs Same Day LW',v:'+4.1%',c:'var(--color-accent-blue)'},{l:'Orders',v:'1,847',c:'var(--color-accent-gold)'},{l:'Avg Basket',v:'$107.20',c:'var(--color-accent-purple)'}],
       cols:['Store','Revenue','Orders','AOV','vs Last Week','Peak Hour'],
       rows:[['Logan Square, IL','$34.2K','298','$114.80','+22%','11am-12pm'],['River North, IL','$32.1K','286','$112.20','+11%','12-1pm'],['Springfield, IL','$28.8K','254','$113.40','+18%','1-2pm'],['Columbus, OH','$22.1K','206','$107.30','+5%','12-1pm'],['Naperville, IL','$16.4K','178','$92.10','-12%','12-1pm'],['Ann Arbor, MI','$14.2K','148','$95.90','-18%','1-2pm'],['Grand Rapids, MI','$12.8K','138','$92.80','-15%','12-1pm'],['Morenci, MI','$8.4K','94','$89.40','-23%','11am-12pm']],
       actions:[{label:'View Declining Stores',done:'Showing MI store details'},{label:'Export Flash Report',done:'CSV downloaded'}]},
     allotment_check: { title:'Purchase Allotment Status', color:'var(--color-accent-blue)', summary:'Customers approaching daily purchase limits — flagged for budtender awareness.',
-      kpis:[{l:'Near Limit',v:'23',c:'var(--color-accent-gold)'},{l:'At Limit',v:'4',c:'var(--color-accent-red)'},{l:'Avg Utilization',v:'62%',c:'#0EA5E9'},{l:'Med Patients',v:'8 near',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Near Limit',v:'23',c:'var(--color-accent-gold)'},{l:'At Limit',v:'4',c:'var(--color-accent-red)'},{l:'Avg Utilization',v:'62%',c:'var(--color-accent-blue)'},{l:'Med Patients',v:'8 near',c:'var(--color-accent-purple)'}],
       cols:['Customer','Type','Purchased Today','Limit','Remaining','Status'],
       rows:[['J. Smith','Rec','0.85 oz','1.0 oz','0.15 oz','Warning'],['M. Johnson','Med','2.1 oz','2.5 oz','0.4 oz','Warning'],['A. Williams','Rec','0.92 oz','1.0 oz','0.08 oz','Critical'],['D. Brown','Rec','1.0 oz','1.0 oz','0 oz','At Limit'],['S. Davis','Med','2.4 oz','2.5 oz','0.1 oz','Critical'],['R. Martinez','Rec','0.78 oz','1.0 oz','0.22 oz','Warning']],
       actions:[{label:'View All Near Limit',done:'Showing full allotment list'},{label:'Export Log',done:'Allotment log downloaded'}]},
@@ -2482,13 +2482,13 @@ function getNexusActionData(action) {
       cols:['Vendor','Fill Rate','On-Time %','Avg Lead Time','Revenue','Margin','Issues'],
       rows:[['Jeeter','98%','96%','3 days','$1.42M','42%','0'],['STIIIZY','95%','94%','4 days','$1.18M','42%','1 short ship'],['Wyld','97%','92%','5 days','$892K','45%','0'],['Raw Garden','94%','90%','4 days','$764K','36%','2 late'],['Kiva','96%','95%','3 days','$651K','44%','0'],['Cookies','82%','78%','7 days','$598K','40%','4 shorts']],
       actions:[{label:'View Vendor Details',done:'Showing full vendor breakdown'},{label:'Export Scorecards',done:'Scorecards downloaded'}]},
-    online_vs_instore: { title:'Online vs In-Store Mix', color:'#0EA5E9', summary:'Channel performance comparison — ecommerce pickup, delivery, and walk-in traffic.',
-      kpis:[{l:'Online %',v:'38%',c:'#0EA5E9'},{l:'Walk-in %',v:'62%',c:'var(--color-accent-green)'},{l:'Online AOV',v:'$112',c:'var(--color-accent-gold)'},{l:'Walk-in AOV',v:'$89',c:'var(--color-accent-purple)'}],
+    online_vs_instore: { title:'Online vs In-Store Mix', color:'var(--color-accent-blue)', summary:'Channel performance comparison — ecommerce pickup, delivery, and walk-in traffic.',
+      kpis:[{l:'Online %',v:'38%',c:'var(--color-accent-blue)'},{l:'Walk-in %',v:'62%',c:'var(--color-accent-green)'},{l:'Online AOV',v:'$112',c:'var(--color-accent-gold)'},{l:'Walk-in AOV',v:'$89',c:'var(--color-accent-purple)'}],
       cols:['Channel','Revenue','Orders','AOV','Growth','Conversion'],
       rows:[['Online Pickup','$2.8M','24.1K','$116.20','+18%','72%'],['Online Delivery','$1.5M','14.2K','$105.60','+24%','68%'],['Walk-In (POS)','$6.9M','77.5K','$89.00','+4%','N/A'],['Curbside','$0.3M','2.8K','$107.10','+31%','74%']],
       actions:[{label:'View Channel Details',done:'Showing full channel breakdown'},{label:'Export Report',done:'Channel report downloaded'}]},
     loyalty_health: { title:'Loyalty Program Health', color:'var(--color-accent-green)', summary:'Loyalty enrollment, engagement, and redemption metrics across the portfolio.',
-      kpis:[{l:'Total Members',v:'48.2K',c:'var(--color-accent-green)'},{l:'Active (30d)',v:'18.7K',c:'#0EA5E9'},{l:'Redemption Rate',v:'34%',c:'var(--color-accent-gold)'},{l:'Lift vs Non-Loyalty',v:'+28% AOV',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Total Members',v:'48.2K',c:'var(--color-accent-green)'},{l:'Active (30d)',v:'18.7K',c:'var(--color-accent-blue)'},{l:'Redemption Rate',v:'34%',c:'var(--color-accent-gold)'},{l:'Lift vs Non-Loyalty',v:'+28% AOV',c:'var(--color-accent-purple)'}],
       cols:['Metric','This Month','Last Month','Change','Goal'],
       rows:[['New Enrollments','2,841','2,612','+8.8%','Balanced'],['Points Issued','1.2M','1.1M','+9.1%','Balanced'],['Redemptions','8,412','7,890','+6.6%','Balanced'],['Lapsed Members (90d+)','4,218','3,840','+9.8%','Review'],['Rev from Loyalty','$4.8M','$4.4M','+9.1%','Balanced'],['Avg Visits (Loyal)','3.2/mo','3.1/mo','+3.2%','Balanced']],
       actions:[{label:'View Lapsed Members',done:'Showing lapsed member details'},{label:'View Enrollment Trends',done:'Showing enrollment breakdown'}]},
@@ -2503,17 +2503,17 @@ function getNexusActionData(action) {
       rows:[['PKG-9421','Columbus','Blue Dream 3.5g x40','Mar 16 2pm','Not Reconciled','Reconcile now'],['PKG-9418','Columbus','Jeeter Rolls x60','Mar 16 10am','Not Reconciled','Reconcile now'],['PKG-9415','Columbus','Wyld Gummies x100','Mar 15 4pm','Not Reconciled','Reconcile now'],['PKG-9412','Columbus','STIIIZY Pods x24','Mar 15 11am','Not Reconciled','Reconcile now'],['PKG-9408','Dayton','Kiva Bars x50','Mar 16 3pm','Synced','OK'],['PKG-9405','Canton','Raw Garden 1g x30','Mar 16 1pm','Synced','OK']],
       actions:[{label:'Start Reconciliation',done:'Reconciliation initiated for 4 packages'},{label:'Contact Columbus Manager',done:'Message sent to store manager'}]},
     cx_improvements: { title:'Customer Experience Opportunities', color:'var(--color-accent-green)', summary:'AI-identified improvements based on review sentiment, wait times, and basket analysis.',
-      kpis:[{l:'Opportunities',v:'6',c:'var(--color-accent-green)'},{l:'Est. NPS Lift',v:'+8 pts',c:'#0EA5E9'},{l:'Est. Rev Impact',v:'+$62K/mo',c:'var(--color-accent-gold)'},{l:'Quick Wins',v:'3',c:'var(--color-accent-purple)'}],
+      kpis:[{l:'Opportunities',v:'6',c:'var(--color-accent-green)'},{l:'Est. NPS Lift',v:'+8 pts',c:'var(--color-accent-blue)'},{l:'Est. Rev Impact',v:'+$62K/mo',c:'var(--color-accent-gold)'},{l:'Quick Wins',v:'3',c:'var(--color-accent-purple)'}],
       cols:['Opportunity','Source','Impact','Effort','Priority'],
       rows:[['Reduce checkout wait to < 5 min','Reviews: 64 wait-time mentions','High — +12% satisfaction','Add express lane at peak hrs','High'],['Budtender product training on edibles','Reviews: "didn\'t know dosing"','Med — fewer returns','2-hr training session','High'],['Add order-ahead for repeat purchases','Survey: 38% want faster pickup','High — +$18K/mo','Dev integration','Medium'],['Improve parking signage','Google reviews: 12 mentions','Low — reduce frustration','New signs — $200','Quick Win'],['Text receipt option','Survey: 52% prefer digital','Med — cost savings','POS config change','Quick Win'],['Loyalty point balance on receipt','Survey: 41% didn\'t know points','Med — +6% redemption','POS template update','Quick Win']],
       actions:[{label:'View Implementation Plan',done:'Showing rollout timeline'},{label:'Export Opportunities',done:'Opportunity list downloaded'}]},
     cross_transfer: { title:'Cross-Store Transfer Recommendations', color:'var(--color-accent-blue)', summary:'AI-identified rebalancing opportunities to recover lost revenue from OOS products.',
-      kpis:[{l:'Transfers Rec.',v:'3',c:'var(--color-accent-blue)'},{l:'Total Units',v:'86',c:'#0EA5E9'},{l:'Est. Rev Recovery',v:'$2,256/wk',c:'var(--color-accent-green)'},{l:'Avg Transit',v:'~24 hrs',c:'var(--color-accent-gold)'}],
+      kpis:[{l:'Transfers Rec.',v:'3',c:'var(--color-accent-blue)'},{l:'Total Units',v:'86',c:'var(--color-accent-blue)'},{l:'Est. Rev Recovery',v:'$2,256/wk',c:'var(--color-accent-green)'},{l:'Avg Transit',v:'~24 hrs',c:'var(--color-accent-gold)'}],
       cols:['Product','From','Surplus','To','Deficit','Transfer Qty','Est. Recovery'],
       rows:[['Blue Dream 3.5g','Naperville, IL','89 units (22d)','Logan Square, IL','0 units (OOS)','40 units','$1,140/wk'],['Wyld Elderberry Gummies','Springfield, IL','44 units (18d)','River North, IL','0 units (OOS)','22 units','$396/wk'],['Stiiizy Live Resin Pod','Boston, MA','62 units (28d)','Worcester, MA','3 units (1d)','24 units','$720/wk']],
       actions:[{label:'Initiate All Transfers',done:'3 transfer requests created — pending manager approval'},{label:'Export Transfer Plan',done:'Transfer plan downloaded'}]},
     metrc_queue: { title:'METRC Package Queue', color:'var(--color-accent-gold)', summary:'Packages awaiting METRC tagging, pending manifests, and sync issues.',
-      kpis:[{l:'Untagged Pkgs',v:'14',c:'var(--color-accent-gold)'},{l:'Pending Manifests',v:'3',c:'#0EA5E9'},{l:'Sync Errors',v:'2',c:'var(--color-accent-red)'},{l:'Avg Tag Time',v:'12 min',c:'var(--color-accent-green)'}],
+      kpis:[{l:'Untagged Pkgs',v:'14',c:'var(--color-accent-gold)'},{l:'Pending Manifests',v:'3',c:'var(--color-accent-blue)'},{l:'Sync Errors',v:'2',c:'var(--color-accent-red)'},{l:'Avg Tag Time',v:'12 min',c:'var(--color-accent-green)'}],
       cols:['Package','Store','Type','Status','METRC Status','Age'],
       rows:[['Blue Dream 3.5g x50','Logan Square','Flower','Received','Needs Tag','2 hrs'],['Jeeter Rolls x100','River North','Pre-Roll','Received','Needs Tag','4 hrs'],['STIIIZY Pods x30','Naperville','Vape','Received','Sync Error','6 hrs'],['Wyld Gummies x200','Schaumburg','Edible','In Transit','Pending Manifest','1 hr'],['Raw Garden 1g x25','Springfield','Concentrate','Received','Needs Tag','3 hrs'],['Kiva Bars x80','Peoria','Edible','Received','Sync Error','8 hrs']],
       actions:[{label:'View Package Details',done:'Showing full package list'},{label:'Export Manifest',done:'Manifest downloaded'}]},
@@ -2570,7 +2570,7 @@ function NexusActionCard({ data, compact = false }) {
               </tr></thead>
               <tbody>
                 {displayRows.map((row, ri) => (
-                  <tr key={ri} className="border-t border-surface-border/30 hover:bg-white/[0.02] transition-colors">
+                  <tr key={ri} className="border-t border-surface-border/30 hover:bg-surface-hover/50 transition-colors">
                     {row.map((cell, ci) => {
                       const color = sc(cell);
                       return <td key={ci} className={`${compact ? 'px-2.5 py-1.5' : 'px-3 py-2'} whitespace-nowrap`}>{color
@@ -2871,7 +2871,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
               { name: 'Raw Garden Slippery Susan', type: 'Live Resin Cart · 1g', strain: 'Slippery Susan', thc: '84%', price: '$40.00', category: 'Vape Cartridge', badgeColor: '#4CAF50', badgeText: 'BEST SELLER', image: brandImg('/brands/raw-garden-cart.webp') },
               { name: 'Raw Garden Dojo Kush', type: 'Live Resin Cart · 1g', strain: 'Dojo Kush', thc: '82%', price: '$40.00', category: 'Vape Cartridge', badgeColor: '#4CAF50', badgeText: 'POPULAR' },
               { name: 'Raw Garden Lemon Haze', type: 'Refined Live Resin · 1g', strain: 'Lemon Haze', thc: '86%', price: '$45.00', category: 'Concentrate', badgeColor: 'var(--color-accent-gold)', badgeText: 'PREMIUM' },
-              { name: 'Raw Garden Beach Party', type: 'Ready-to-Use · 0.5g', strain: 'Beach Party', thc: '80%', price: '$30.00', category: 'Disposable Vape', badgeColor: '#0EA5E9', badgeText: 'NEW' },
+              { name: 'Raw Garden Beach Party', type: 'Ready-to-Use · 0.5g', strain: 'Beach Party', thc: '80%', price: '$30.00', category: 'Disposable Vape', badgeColor: 'var(--color-accent-blue)', badgeText: 'NEW' },
             ],
             'alien labs': [
               { name: 'Alien Labs Xeno', type: 'Flower · 3.5g', strain: 'Xeno', thc: '31%', price: '$55.00', category: 'Flower', badgeColor: '#00BCD4', badgeText: 'NEW', image: brandImg('/brands/alien-xeno.png') },
@@ -2892,7 +2892,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
             flower: [
               { name: 'Top Shelf Indica', type: 'Flower · 3.5g', thc: '28%', price: '$48.00', category: 'Flower', badgeColor: '#4CAF50', badgeText: 'POPULAR' },
               { name: 'Premium Sativa', type: 'Flower · 3.5g', thc: '26%', price: '$45.00', category: 'Flower', badgeColor: 'var(--color-accent-gold)', badgeText: 'STAFF PICK' },
-              { name: 'House Hybrid', type: 'Flower · 3.5g', thc: '24%', price: '$38.00', category: 'Flower', badgeColor: '#0EA5E9', badgeText: 'VALUE' },
+              { name: 'House Hybrid', type: 'Flower · 3.5g', thc: '24%', price: '$38.00', category: 'Flower', badgeColor: 'var(--color-accent-blue)', badgeText: 'VALUE' },
             ],
             edible: [
               { name: 'Fruit Gummies 10pk', type: 'Hybrid · 100mg', thc: '100mg', price: '$20.00', category: 'Edible', badgeColor: '#E91E63', badgeText: 'POPULAR' },
@@ -2901,7 +2901,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
             ],
             vape: [
               { name: 'Live Resin Cart 1g', type: 'Hybrid', thc: '84%', price: '$42.00', category: 'Vape Cartridge', badgeColor: '#4CAF50', badgeText: 'BEST SELLER' },
-              { name: 'Disposable 0.5g', type: 'Sativa', thc: '80%', price: '$28.00', category: 'Disposable', badgeColor: '#0EA5E9', badgeText: 'PORTABLE' },
+              { name: 'Disposable 0.5g', type: 'Sativa', thc: '80%', price: '$28.00', category: 'Disposable', badgeColor: 'var(--color-accent-blue)', badgeText: 'PORTABLE' },
               { name: 'Premium Pod 1g', type: 'Indica', thc: '88%', price: '$50.00', category: 'Vape Pod', badgeColor: '#9333EA', badgeText: 'PREMIUM' },
             ],
             'pre-roll': [
@@ -2912,7 +2912,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
             concentrate: [
               { name: 'Live Resin Badder', type: '1g · Hybrid', thc: '78%', price: '$38.00', category: 'Concentrate', badgeColor: 'var(--color-accent-gold)', badgeText: 'POPULAR' },
               { name: 'Rosin Press', type: '1g · Indica', thc: '72%', price: '$55.00', category: 'Concentrate', badgeColor: '#9333EA', badgeText: 'PREMIUM' },
-              { name: 'Shatter', type: '1g · Sativa', thc: '82%', price: '$32.00', category: 'Concentrate', badgeColor: '#0EA5E9', badgeText: 'VALUE' },
+              { name: 'Shatter', type: '1g · Sativa', thc: '82%', price: '$32.00', category: 'Concentrate', badgeColor: 'var(--color-accent-blue)', badgeText: 'VALUE' },
             ],
           };
 
@@ -2928,7 +2928,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
             title: `Brand Spotlight: ${subject}`,
             subtitle: `Targeted campaign to boost ${subject.toLowerCase()} sales`,
             icon: 'Star',
-            accentFrom: '#0EA5E9',
+            accentFrom: 'var(--color-accent-blue)',
             accentTo: '#6366F1',
             heroGradient: 'from-cyan-900/60 via-blue-900/40 to-indigo-900/60',
             heroBorder: 'border-cyan-500/30',
@@ -3287,7 +3287,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
                 onClick={() => setCatalogOpen(!catalogOpen)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-card border border-surface-border hover:border-surface-border transition-colors text-xs text-text-secondary hover:text-text-primary"
               >
-                <Layers className="w-3.5 h-3.5 text-[#0EA5E9]" />
+                <Layers className="w-3.5 h-3.5 text-accent-blue" />
                 <span className="font-medium">{activeCount}/{totalCount} Products</span>
                 <PanelRight className="w-3.5 h-3.5" />
               </button>
@@ -3317,7 +3317,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
                 { label: 'Inventory', color: 'var(--color-accent-blue)' },
                 { label: 'Campaigns', color: 'var(--color-accent-green)' },
                 { label: 'Pricing', color: 'var(--color-accent-gold)' },
-                { label: 'Reporting', color: '#0EA5E9' },
+                { label: 'Reporting', color: 'var(--color-accent-blue)' },
                 { label: 'Support', color: 'var(--color-accent-purple)' },
                 { label: 'Compliance', color: '#E880A0' },
               ].map(t => (

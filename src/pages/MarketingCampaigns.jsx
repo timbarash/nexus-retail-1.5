@@ -688,7 +688,7 @@ export function CampaignPlan({ data, onBack }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent" />
         <div className="relative px-8 py-8">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-white/20 text-white/70 uppercase tracking-wider">{c.heroTag}</span>
+            <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full border border-surface-border text-text-secondary uppercase tracking-wider">{c.heroTag}</span>
             {!hasHeroGradient && <span className="text-[10px] font-semibold px-2.5 py-1 rounded-full bg-accent-purple/15 text-accent-purple">AI Generated</span>}
           </div>
           <div className="flex items-center gap-3">
@@ -1439,7 +1439,7 @@ export default function MarketingCampaigns() {
                     <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${s.gradient} flex items-center justify-center`}>
                       <s.icon className="w-4 h-4 text-text-primary" />
                     </div>
-                    <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full border border-white/10" style={{ color: s.tagColor }}>{s.tag}</span>
+                    <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full border border-surface-border" style={{ color: s.tagColor }}>{s.tag}</span>
                     {s.confidence === 'high' && <span className="text-[9px] font-semibold text-accent-green bg-accent-green/10 px-1.5 py-0.5 rounded border border-accent-green/30">High Confidence</span>}
                     {s.confidence === 'medium' && <span className="text-[9px] font-semibold text-accent-gold bg-accent-gold/10 px-1.5 py-0.5 rounded border border-dashed border-accent-gold/30">Review Suggested</span>}
                   </div>
