@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { AlertTriangle, X } from 'lucide-react';
 
 export default function ConfirmationDrawer({
@@ -15,7 +16,7 @@ export default function ConfirmationDrawer({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <>
       <div
         className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm animate-[fadeIn_150ms_ease-out]"
@@ -38,7 +39,7 @@ export default function ConfirmationDrawer({
         </div>
 
         {details.length > 0 && (
-          <div className="mx-5 rounded-xl border border-surface-border bg-surface-bg divide-y divide-surface-border/60">
+          <div className="mx-5 rounded-xl border border-surface-border bg-surface-bg divide-y divide-surface-divider">
             {details.map((d, i) => (
               <div key={i} className="flex items-center justify-between px-4 py-2.5">
                 <span className="text-[11px] text-text-muted">{d.label}</span>
@@ -71,6 +72,7 @@ export default function ConfirmationDrawer({
           </button>
         </div>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

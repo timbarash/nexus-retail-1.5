@@ -11,6 +11,7 @@ export default {
           bg: 'var(--color-surface-bg)',
           card: 'var(--color-surface-card)',
           border: 'var(--color-surface-border)',
+          divider: 'var(--color-surface-divider)',
           hover: 'var(--color-surface-hover)',
           muted: 'var(--color-surface-muted)',
         },
@@ -38,17 +39,25 @@ export default {
           50: 'var(--color-accent-green-bg)',
           100: 'rgba(0,194,124,0.10)',
           500: 'var(--color-accent-green)',
-          600: '#00B07A',
-          700: '#00996B',
+          600: 'var(--color-accent-green)',
+          700: 'var(--color-accent-green)',
         },
       },
+      borderColor: {
+        DEFAULT: 'var(--color-surface-divider)',
+      },
+      divideColor: {
+        DEFAULT: 'var(--color-surface-divider)',
+      },
       boxShadow: {
-        'sm': '0 1px 3px rgba(0,0,0,0.3)',
+        'sm': '0 1px 3px rgba(0,0,0,0.12)',
         'card': 'var(--shadow-card)',
-        'card-hover': '0 4px 12px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2)',
-        'sidebar': '2px 0 12px rgba(0,0,0,0.3)',
+        'card-hover': '0 4px 16px var(--shadow-hover-color, rgba(0,0,0,0.10)), 0 2px 6px var(--shadow-hover-color, rgba(0,0,0,0.06))',
+        'sidebar': '2px 0 12px rgba(0,0,0,0.15)',
+        'sidebar-depth': '4px 0 8px -2px rgba(0,0,0,0.25), 8px 0 24px -4px rgba(0,0,0,0.15), 1px 0 0 0 rgba(0,0,0,0.2)',
         'elevated': 'var(--shadow-elevated)',
-        'lg': '0 4px 16px rgba(0,0,0,0.4)',
+        'lg': '0 4px 16px rgba(0,0,0,0.14)',
+        'glow-gold': '0 0 20px color-mix(in srgb, var(--color-accent-gold) 10%, transparent)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out forwards',
@@ -56,6 +65,8 @@ export default {
         'slide-in-left': 'slideInLeft 0.3s ease-out forwards',
         'pulse-subtle': 'pulseSubtle 2s ease-in-out infinite',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'status-pulse': 'statusPulse 2.5s ease-in-out infinite',
+        'nexus-glow': 'nexusGlowRotate 6s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -77,6 +88,14 @@ export default {
         pulseGlow: {
           '0%, 100%': { boxShadow: '0 0 0 0 rgba(0,194,124,0.4)' },
           '50%': { boxShadow: '0 0 0 8px rgba(0,194,124,0)' },
+        },
+        statusPulse: {
+          '0%, 100%': { boxShadow: '0 0 0 0 rgba(0,194,124,0.45)' },
+          '50%': { boxShadow: '0 0 6px 2px rgba(0,194,124,0.15)' },
+        },
+        nexusGlowRotate: {
+          from: { '--nexus-glow-angle': '0deg' },
+          to: { '--nexus-glow-angle': '360deg' },
         },
       },
     },

@@ -4,15 +4,17 @@
 
 /* ========================================
    Nexus 1.5 — Theme System
-   Dark default, light via data-theme="light"
+   Dark default, light via data-theme="light",
+   classic via data-theme="classic"
    ======================================== */
 
 :root {
   /* Surface */
   --color-surface-bg: #141210;
   --color-surface-card: #1C1B1A;
-  --color-surface-border: #38332B;
-  --color-surface-hover: #282724;
+  --color-surface-border: #383430;
+  --color-surface-divider: rgba(255,255,255,0.04);
+  --color-surface-hover: #343230;
   --color-surface-muted: #1E1D1B;
 
   /* Text */
@@ -29,6 +31,7 @@
   --color-accent-blue: #64A8E0;
   --color-accent-purple: #B598E8;
   --color-accent-red: #E87068;
+  --color-nexus-icon-edge: #E8B44A;
 
   /* Sidebar — stays dark in both modes */
   --color-sidebar-bg: #042017;
@@ -39,43 +42,106 @@
   --shadow-card: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.15);
   --shadow-elevated: 0 8px 24px rgba(0,0,0,0.4);
 
-  /* Scrollbar */
-  --scrollbar-thumb: #38332B;
-  --scrollbar-thumb-hover: #6B6359;
+  /* Scrollbar — warm-tinted */
+  --scrollbar-thumb: #3D3529;
+  --scrollbar-thumb-hover: #6B6050;
+
+  /* Shadow hover tint */
+  --shadow-hover-color: rgba(0,0,0,0.10);
 }
 
 [data-theme="light"] {
-  /* Surface */
-  --color-surface-bg: #FAFAF8;
-  --color-surface-card: #FFFFFF;
-  --color-surface-border: #E5E2DC;
-  --color-surface-hover: #F0EDE8;
-  --color-surface-muted: #F5F3F0;
+  /* =============================================
+     PARCHMENT & INK — Premium Light Mode
+     Vintage apothecary meets modern cannabis tech.
+     Deep warm parchment, rich gold, botanical green.
+     ============================================= */
 
-  /* Text */
-  --color-text-primary: #1A1917;
-  --color-text-secondary: #5C574F;
-  --color-text-muted: #8C8680;
-  --color-text-inverse: #FFFFFF;
+  /* Surface — true parchment palette with depth and warmth */
+  --color-surface-bg: #EDE8DC;
+  --color-surface-card: #F7F4EC;
+  --color-surface-border: #D5CEBC;
+  --color-surface-divider: rgba(100,85,55,0.10);
+  --color-surface-hover: #E4DFCF;
+  --color-surface-muted: #E8E3D5;
 
-  /* Accent (adjusted for light bg contrast) */
-  --color-accent-green: #059669;
-  --color-accent-green-light: #10B981;
-  --color-accent-green-bg: rgba(5,150,105,0.08);
-  --color-accent-gold: #B8860B;
-  --color-accent-blue: #2563EB;
-  --color-accent-purple: #7C3AED;
-  --color-accent-red: #DC2626;
+  /* Text — deep brown-blacks, rich ink tones, never cold */
+  --color-text-primary: #2C2416;
+  --color-text-secondary: #5C5243;
+  --color-text-muted: #706858;
+  --color-text-inverse: #F7F4EC;
+
+  /* Accent — rich and commanding against parchment */
+  --color-accent-green: #0B6E44;
+  --color-accent-green-light: #0E8252;
+  --color-accent-green-bg: rgba(11,110,68,0.08);
+  --color-accent-gold: #7A5F12;
+  --color-accent-blue: #2E6399;
+  --color-accent-purple: #6B4DAA;
+  --color-accent-red: #B33A30;
+  --color-nexus-icon-edge: #8B6914;
 
   /* Sidebar stays dark */
 
-  /* Shadows */
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-elevated: 0 8px 24px rgba(0,0,0,0.12);
+  /* Shadows — warm sepia-tinted, strong enough to create real depth */
+  --shadow-card: 0 1px 3px rgba(60,48,20,0.08), 0 2px 8px rgba(60,48,20,0.05);
+  --shadow-elevated: 0 8px 32px rgba(60,48,20,0.14), 0 2px 8px rgba(60,48,20,0.08);
 
-  /* Scrollbar */
-  --scrollbar-thumb: #D5D0C8;
-  --scrollbar-thumb-hover: #B5B0A8;
+  /* Scrollbar — warm bronze tones */
+  --scrollbar-thumb: #C4B99C;
+  --scrollbar-thumb-hover: #A89975;
+
+  /* Shadow hover tint — sepia warm */
+  --shadow-hover-color: rgba(60,48,20,0.10);
+}
+
+[data-theme="classic"] {
+  /* =============================================
+     CLASSIC — Clean, cool white SaaS theme
+     Standard neutral whites with bright accents.
+     ============================================= */
+
+  /* Surfaces — clean, cool whites */
+  --color-surface-bg: #FAFAFA;
+  --color-surface-card: #FFFFFF;
+  --color-surface-border: #E5E7EB;
+  --color-surface-hover: #F3F4F6;
+  --color-surface-muted: #F9FAFB;
+  --color-surface-divider: rgba(0,0,0,0.06);
+
+  /* Text — cool neutrals */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-muted: #6C747F;
+  --color-text-inverse: #FFFFFF;
+
+  /* Accents — brighter, standard SaaS colors */
+  --color-accent-green: #059669;
+  --color-accent-green-light: #10B981;
+  --color-accent-green-bg: rgba(5,150,105,0.08);
+  --color-accent-gold: #D97706;
+  --color-accent-blue: #2563EB;
+  --color-accent-purple: #7C3AED;
+  --color-accent-red: #DC2626;
+  --color-nexus-icon-edge: #D97706;
+
+  /* Sidebar stays dark */
+
+  /* Shadows — cool, standard */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-elevated: 0 4px 16px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+
+  /* Scrollbar — neutral gray */
+  --scrollbar-thumb: #D1D5DB;
+  --scrollbar-thumb-hover: #9CA3AF;
+
+  /* Shadow hover tint — cool, standard */
+  --shadow-hover-color: rgba(0,0,0,0.08);
+}
+
+/* ---- Theme transition ---- */
+*, *::before, *::after {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 /* ---- Base ---- */
@@ -103,6 +169,16 @@ body {
 /* ---- Smooth transitions ---- */
 button, a, input, select, [role="button"] {
   transition: all 0.15s ease-in-out;
+}
+
+/* ---- Page transition ---- */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-transition {
+  animation: pageEnter 0.3s ease-out;
 }
 
 /* ---- Animations ---- */
@@ -144,6 +220,46 @@ button, a, input, select, [role="button"] {
   .animate-ticker { animation: ticker-scroll 30s linear infinite; }
 }
 
+/* Morning briefing text reveal shimmer */
+@keyframes textRevealShimmer {
+  0% { background-position: -200% center; opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { background-position: 200% center; opacity: 1; }
+}
+
+.briefing-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-text-primary) 0%,
+    var(--color-text-primary) 40%,
+    var(--color-accent-gold) 50%,
+    var(--color-text-primary) 60%,
+    var(--color-text-primary) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textRevealShimmer 1.5s ease-out forwards;
+}
+
+/* Transfer completion celebration */
+@keyframes elasticPop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  80% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes greenPulse {
+  0% { background-color: transparent; }
+  50% { background-color: rgba(0, 194, 124, 0.06); }
+  100% { background-color: transparent; }
+}
+
+.elastic-pop { animation: elasticPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.green-pulse { animation: greenPulse 0.8s ease-out; }
+
 /* Staggered card entrance */
 .stagger-grid > * { opacity: 0; animation: fadeUp 0.4s ease-out both; }
 .stagger-grid > *:nth-child(1) { animation-delay: 0ms; }
@@ -159,6 +275,15 @@ button, a, input, select, [role="button"] {
 .stagger-grid > *:nth-child(11) { animation-delay: 600ms; }
 .stagger-grid > *:nth-child(12) { animation-delay: 660ms; }
 
+/* ---- Suggestion tile hover accent border ---- */
+.connect-suggestion-tile {
+  transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.connect-suggestion-tile:hover {
+  border-color: color-mix(in srgb, var(--tile-accent, var(--color-accent-green)) 35%, transparent);
+  box-shadow: var(--shadow-card), 0 0 0 1px color-mix(in srgb, var(--tile-accent, var(--color-accent-green)) 10%, transparent);
+}
+
 /* ---- Chart container ---- */
 @layer components {
   .chart-container {
@@ -173,6 +298,239 @@ button, a, input, select, [role="button"] {
   }
 }
 
+/* ---- Parchment & Ink: light mode depth and texture ---- */
+[data-theme="light"] body {
+  /* Subtle parchment texture via layered radial gradients — barely visible but adds life */
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(184,134,11,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(11,110,68,0.02) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(60,48,20,0.03) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+[data-theme="light"] .chart-container:hover,
+[data-theme="classic"] .chart-container:hover {
+  box-shadow: 0 4px 16px rgba(60,48,20,0.10), 0 1px 4px rgba(60,48,20,0.06);
+  filter: none;
+}
+[data-theme="classic"] .chart-container:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* Stronger hover feedback on cards in parchment mode */
+[data-theme="light"] .connect-suggestion-tile:hover,
+[data-theme="classic"] .connect-suggestion-tile:hover {
+  box-shadow: var(--shadow-card), 0 4px 16px rgba(60,48,20,0.08), 0 0 0 1px color-mix(in srgb, var(--tile-accent, var(--color-accent-green)) 20%, transparent);
+  transform: translateY(-1px);
+}
+[data-theme="classic"] .connect-suggestion-tile:hover {
+  box-shadow: var(--shadow-card), 0 4px 16px rgba(0,0,0,0.06), 0 0 0 1px color-mix(in srgb, var(--tile-accent, var(--color-accent-green)) 20%, transparent);
+}
+
+
+/* ---- Parchment scrollbar track tint ---- */
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: rgba(60,48,20,0.03);
+}
+[data-theme="classic"] ::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.02);
+}
+
+/* ========================================
+   DESIGN SPRINT — Premium AI-native refinements
+   ======================================== */
+
+/* ---- DS-1. Dot grid background pattern ----
+   Very subtle dot grid (like Vercel/Stripe) behind the main content area.
+   1px dots, 24px spacing. Adds a technical "engineered control surface" feel
+   without competing with content. Uses repeating radial-gradient. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--color-text-muted) 18%, transparent) 0.5px,
+    transparent 0.5px
+  );
+  background-size: 24px 24px;
+  background-position: 12px 12px;
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 80% 70% at 60% 40%, black 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 60% 40%, black 0%, transparent 100%);
+}
+[data-theme="light"] body::after,
+[data-theme="classic"] body::after {
+  opacity: 0.25;
+  background-image: radial-gradient(
+    circle at center,
+    color-mix(in srgb, var(--color-text-muted) 25%, transparent) 0.5px,
+    transparent 0.5px
+  );
+}
+
+/* ---- DS-2. Radial spotlight behind hero card (MorningBriefing) ----
+   A large, very subtle radial gradient (gold-tinted) that illuminates
+   the area behind the first card. Creates a "spotlight" that draws the
+   eye to the morning briefing. Like Linear's hero spotlight. Applied
+   via the main content area's ::after or a direct descendant selector.
+   Targets the first .animate-fade-up inside the main scrollable area. */
+main.overflow-auto > div > .animate-fade-up:first-child {
+  position: relative;
+  z-index: 1;
+}
+main.overflow-auto > div > .animate-fade-up:first-child::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  left: -80px;
+  right: -80px;
+  bottom: -40px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 100% 100% at 30% 40%,
+    color-mix(in srgb, var(--color-accent-gold) 6%, transparent) 0%,
+    color-mix(in srgb, var(--color-accent-gold) 2%, transparent) 40%,
+    transparent 70%
+  );
+  border-radius: 32px;
+  filter: blur(20px);
+}
+[data-theme="light"] main.overflow-auto > div > .animate-fade-up:first-child::before,
+[data-theme="classic"] main.overflow-auto > div > .animate-fade-up:first-child::before {
+  background: radial-gradient(
+    ellipse 100% 100% at 30% 40%,
+    color-mix(in srgb, var(--color-accent-gold) 8%, transparent) 0%,
+    color-mix(in srgb, var(--color-accent-gold) 3%, transparent) 40%,
+    transparent 70%
+  );
+}
+
+/* ---- DS-3. Sidebar depth shadow ----
+   The sidebar casts a soft, warm shadow into the main content area.
+   Not a hard border — a layered, atmospheric shadow that creates real
+   depth between the navigation and the content. Like a wall casting
+   shadow into a room. Targets the desktop sidebar's right edge. */
+aside.lg\:flex {
+  box-shadow:
+    4px 0 8px -2px rgba(0,0,0,0.25),
+    8px 0 24px -4px rgba(0,0,0,0.15),
+    1px 0 0 0 rgba(0,0,0,0.2);
+}
+[data-theme="light"] aside.lg\:flex {
+  box-shadow:
+    4px 0 8px -2px rgba(60,48,20,0.08),
+    8px 0 20px -4px rgba(60,48,20,0.05),
+    1px 0 0 0 rgba(60,48,20,0.06);
+}
+[data-theme="classic"] aside.lg\:flex {
+  box-shadow:
+    4px 0 8px -2px rgba(0,0,0,0.06),
+    8px 0 20px -4px rgba(0,0,0,0.04),
+    1px 0 0 0 rgba(0,0,0,0.05);
+}
+
+/* ---- DS-4. Topographic contour line texture ----
+   A very subtle topographic/contour line pattern layered behind
+   content. Cannabis is organic, earth-rooted — topo lines say
+   "natural + technical" like a terrain survey map. No other SaaS
+   does this. Uses SVG data-URI with a barely-visible stroke.
+   Layered behind the dot grid, fading out toward edges. */
+#root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cstyle%3Epath%7Bfill:none;stroke:%23F0EDE8;stroke-width:0.8%7D%3C/style%3E%3C/defs%3E%3Cpath d='M0 200 Q50 160 100 180 T200 170 T300 190 T400 175'/%3E%3Cpath d='M0 240 Q60 200 120 220 T240 210 T360 230 T400 215'/%3E%3Cpath d='M0 280 Q70 245 140 260 T280 250 T400 265'/%3E%3Cpath d='M0 160 Q40 130 80 145 T160 135 T240 150 T320 140 T400 155'/%3E%3Cpath d='M0 120 Q50 95 100 108 T200 100 T300 112 T400 105'/%3E%3Cpath d='M0 320 Q80 290 160 305 T320 295 T400 310'/%3E%3Cpath d='M0 80 Q35 60 70 70 T140 62 T210 72 T280 65 T350 75 T400 68'/%3E%3Cpath d='M0 360 Q90 335 180 350 T360 340 T400 350'/%3E%3Cpath d='M0 40 Q30 28 60 35 T120 30 T180 38 T240 32 T300 40 T360 34 T400 38'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 400px 400px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 0%, transparent 100%);
+}
+[data-theme="light"] #root::before {
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cstyle%3Epath%7Bfill:none;stroke:%232C2416;stroke-width:0.8%7D%3C/style%3E%3C/defs%3E%3Cpath d='M0 200 Q50 160 100 180 T200 170 T300 190 T400 175'/%3E%3Cpath d='M0 240 Q60 200 120 220 T240 210 T360 230 T400 215'/%3E%3Cpath d='M0 280 Q70 245 140 260 T280 250 T400 265'/%3E%3Cpath d='M0 160 Q40 130 80 145 T160 135 T240 150 T320 140 T400 155'/%3E%3Cpath d='M0 120 Q50 95 100 108 T200 100 T300 112 T400 105'/%3E%3Cpath d='M0 320 Q80 290 160 305 T320 295 T400 310'/%3E%3Cpath d='M0 80 Q35 60 70 70 T140 62 T210 72 T280 65 T350 75 T400 68'/%3E%3Cpath d='M0 360 Q90 335 180 350 T360 340 T400 350'/%3E%3Cpath d='M0 40 Q30 28 60 35 T120 30 T180 38 T240 32 T300 40 T360 34 T400 38'/%3E%3C/svg%3E");
+}
+[data-theme="classic"] #root::before {
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cstyle%3Epath%7Bfill:none;stroke:%23111827;stroke-width:0.8%7D%3C/style%3E%3C/defs%3E%3Cpath d='M0 200 Q50 160 100 180 T200 170 T300 190 T400 175'/%3E%3Cpath d='M0 240 Q60 200 120 220 T240 210 T360 230 T400 215'/%3E%3Cpath d='M0 280 Q70 245 140 260 T280 250 T400 265'/%3E%3Cpath d='M0 160 Q40 130 80 145 T160 135 T240 150 T320 140 T400 155'/%3E%3Cpath d='M0 120 Q50 95 100 108 T200 100 T300 112 T400 105'/%3E%3Cpath d='M0 320 Q80 290 160 305 T320 295 T400 310'/%3E%3Cpath d='M0 80 Q35 60 70 70 T140 62 T210 72 T280 65 T350 75 T400 68'/%3E%3Cpath d='M0 360 Q90 335 180 350 T360 340 T400 350'/%3E%3Cpath d='M0 40 Q30 28 60 35 T120 30 T180 38 T240 32 T300 40 T360 34 T400 38'/%3E%3C/svg%3E");
+}
+
+/* ---- DS-5. Animated gradient border on NexusIcon (sidebar logo) ----
+   The spiral logo in the sidebar has a slowly rotating conic-gradient
+   border that "breathes" — a living AI indicator. Says "the system is
+   always on, always thinking." Targets the icon container in the sidebar
+   header. Uses @property for smooth hue-shift animation. */
+@property --nexus-glow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+@keyframes nexusGlowRotate {
+  from { --nexus-glow-angle: 0deg; }
+  to   { --nexus-glow-angle: 360deg; }
+}
+aside .border-b .rounded-xl:has(svg) {
+  position: relative;
+  border: none !important;
+  background-clip: padding-box !important;
+}
+aside .border-b .rounded-xl:has(svg)::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--nexus-glow-angle),
+    rgba(212,160,58,0.5) 0deg,
+    rgba(0,194,124,0.3) 90deg,
+    rgba(212,160,58,0.15) 180deg,
+    rgba(0,194,124,0.5) 270deg,
+    rgba(212,160,58,0.5) 360deg
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: nexusGlowRotate 6s linear infinite;
+  opacity: 0.7;
+}
+aside .border-b .rounded-xl:has(svg)::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 16px;
+  background: conic-gradient(
+    from var(--nexus-glow-angle),
+    rgba(212,160,58,0.12) 0deg,
+    transparent 90deg,
+    rgba(0,194,124,0.08) 180deg,
+    transparent 270deg,
+    rgba(212,160,58,0.12) 360deg
+  );
+  animation: nexusGlowRotate 6s linear infinite;
+  filter: blur(6px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ---- NexusIcon "thinking" accelerated state ---- */
+[data-nexus-thinking="true"] aside .border-b .rounded-xl:has(svg)::before {
+  animation-duration: 2s !important;
+  opacity: 1 !important;
+}
+[data-nexus-thinking="true"] aside .border-b .rounded-xl:has(svg)::after {
+  animation-duration: 2s !important;
+  filter: blur(10px) !important;
+  opacity: 0.6 !important;
+}
+
 /* ---- Line clamp ---- */
 @layer utilities {
   .line-clamp-2 {
@@ -181,4 +539,224 @@ button, a, input, select, [role="button"] {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-none {
+    display: block;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: initial;
+    overflow: visible;
+  }
+}
+
+/* ========================================
+   POLISH PASS — Premium Visual Refinements
+   ======================================== */
+
+/* ---- 1. Subtle noise texture overlay ----
+   Adds a barely-visible grain to all surfaces, like Stripe/Linear.
+   Uses an SVG noise filter encoded as a data-URI on a fixed pseudo-element. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+[data-theme="light"] body::before,
+[data-theme="classic"] body::before {
+  opacity: 0.03;
+}
+
+/* ---- 2. Dark-mode card hover glow ----
+   Replaces blunt brightness filter with a warm gold-tinted border glow.
+   Targets any card-shaped element with the border-surface-border class. */
+:root .rounded-2xl[class*="border-surface-border"][class*="shadow-card"] {
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
+:root .rounded-2xl[class*="border-surface-border"][class*="shadow-card"]:hover {
+  border-color: color-mix(in srgb, var(--color-accent-gold) 18%, var(--color-surface-border));
+  box-shadow: var(--shadow-card), 0 0 16px color-mix(in srgb, var(--color-accent-gold) 6%, transparent);
+}
+[data-theme="light"] .rounded-2xl[class*="border-surface-border"][class*="shadow-card"]:hover {
+  border-color: color-mix(in srgb, var(--color-accent-gold) 20%, var(--color-surface-border));
+  box-shadow: var(--shadow-card), 0 4px 20px rgba(60,48,20,0.10);
+}
+[data-theme="classic"] .rounded-2xl[class*="border-surface-border"][class*="shadow-card"]:hover {
+  border-color: color-mix(in srgb, var(--color-accent-gold) 20%, var(--color-surface-border));
+  box-shadow: var(--shadow-card), 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* ---- 3. Focus-visible ring — warm gold, accessible ----
+   Every interactive element gets a clear but on-brand focus indicator. */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-surface-bg), 0 0 0 4px color-mix(in srgb, var(--color-accent-gold) 55%, transparent);
+}
+[data-theme="light"] :focus-visible,
+[data-theme="classic"] :focus-visible {
+  box-shadow: 0 0 0 2px var(--color-surface-card), 0 0 0 4px color-mix(in srgb, var(--color-accent-gold) 50%, transparent);
+}
+
+/* ---- 4. Tabular-nums for all numeric displays ----
+   Prevents layout jank in metric cards, tables, badges. */
+@layer utilities {
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+}
+/* Apply tabular-nums to numeric display contexts (KPI cards, metric displays, tables) */
+.tabular-nums,
+td [class*="font-bold"], td [class*="font-semibold"],
+[class*="text-2xl"][class*="font-bold"],
+[class*="text-xl"][class*="font-bold"],
+[class*="text-3xl"][class*="font-bold"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- 5. Dark-mode card inner gradient (lit-from-above) ----
+   Adds a very subtle top highlight to cards for depth. */
+:root .rounded-2xl[class*="bg-surface-card"] {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, #FFFFFF 1.5%, var(--color-surface-card)) 0%,
+    var(--color-surface-card) 40%
+  );
+}
+[data-theme="light"] .rounded-2xl[class*="bg-surface-card"],
+[data-theme="classic"] .rounded-2xl[class*="bg-surface-card"] {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, #FFFFFF 40%, var(--color-surface-card)) 0%,
+    var(--color-surface-card) 50%
+  );
+}
+
+/* ---- 6. Section divider presence — slightly stronger + gradient ----
+   Makes section separators within cards more visible. */
+:root {
+  --color-surface-divider-enhanced: rgba(255,255,255,0.07);
+}
+[data-theme="light"] {
+  --color-surface-divider-enhanced: rgba(100,85,55,0.13);
+}
+[data-theme="classic"] {
+  --color-surface-divider-enhanced: rgba(0,0,0,0.08);
+}
+.border-b[class*="border-surface-divider"],
+.divide-y[class*="divide-surface-divider"] > * + * {
+  border-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-surface-divider-enhanced) 15%,
+    var(--color-surface-divider-enhanced) 85%,
+    transparent 100%
+  ) 1;
+}
+
+/* ---- 7. Sidebar active nav indicator — left accent bar ----
+   Targets active NavLink items in the sidebar. The active link gets a
+   glowing left edge bar (2px green with soft glow) for a premium feel,
+   similar to Linear/Vercel sidebar patterns. Uses ::before pseudo-element
+   so no component changes are needed. */
+/* Removed: static ::before indicator replaced by traveling indicator div in Sidebar.jsx */
+
+/* ---- 8. Gold-tinted text selection ----
+   Replaces the default blue highlight with a warm gold-amber tint.
+   Every premium product (Linear, Vercel, Arc) customizes ::selection.
+   Dark mode: translucent gold on dark. Light mode: stronger gold on parchment. */
+::selection {
+  background: color-mix(in srgb, var(--color-accent-gold) 30%, transparent);
+  color: var(--color-text-primary);
+}
+::-moz-selection {
+  background: color-mix(in srgb, var(--color-accent-gold) 30%, transparent);
+  color: var(--color-text-primary);
+}
+[data-theme="light"] ::selection,
+[data-theme="classic"] ::selection {
+  background: color-mix(in srgb, var(--color-accent-gold) 25%, transparent);
+  color: var(--color-text-primary);
+}
+[data-theme="light"] ::-moz-selection,
+[data-theme="classic"] ::-moz-selection {
+  background: color-mix(in srgb, var(--color-accent-gold) 25%, transparent);
+  color: var(--color-text-primary);
+}
+
+/* ---- 9. Status dot pulse glow ----
+   Any small rounded-full dot that acts as a status indicator in the
+   sidebar (active nav dots, online indicators) gets a subtle breathing
+   glow. Targets the small green dot pattern used on active nav items
+   and similar status indicators throughout the app. */
+@keyframes statusPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0,194,124,0.45);
+  }
+  50% {
+    box-shadow: 0 0 6px 2px rgba(0,194,124,0.15);
+  }
+}
+/* Active sidebar nav dot */
+aside nav a[aria-current="page"] .rounded-full[class*="bg-"] {
+  animation: statusPulse 2.5s ease-in-out infinite;
+}
+/* Generic small status dots anywhere */
+.status-dot-pulse {
+  animation: statusPulse 2.5s ease-in-out infinite;
+}
+
+/* Scroll progress indicator removed — was distracting */
+
+/* ---- Glassmorphic Agent Input Bar ---- */
+.nexus-input-glass {
+  background: color-mix(in srgb, var(--color-surface-card) 60%, transparent) !important;
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+}
+
+.nexus-input-glass:focus-within {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--color-accent-gold) 30%, transparent),
+    0 0 20px color-mix(in srgb, var(--color-accent-gold) 8%, transparent);
+}
+
+[data-theme="light"] .nexus-input-glass,
+[data-theme="classic"] .nexus-input-glass {
+  background: color-mix(in srgb, var(--color-surface-card) 70%, transparent) !important;
+}
+
+/* ---- Light mode: boost gold-tinted backgrounds for visibility ---- */
+[data-theme="light"] .bg-accent-gold\/10,
+[data-theme="light"] .bg-accent-gold\/\[0\.08\],
+[data-theme="classic"] .bg-accent-gold\/10,
+[data-theme="classic"] .bg-accent-gold\/\[0\.08\] {
+  background-color: color-mix(in srgb, var(--color-accent-gold) 18%, transparent) !important;
+}
+
+/* Safe area for mobile bottom tab bar */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: calc(3.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* ---- Font size floor: prevent sub-10px text ---- */
+[class*="text-\[8px\]"], [class*="text-\[9px\]"] {
+  font-size: 10px !important;
+}
+
+/* ---- Mobile-specific overrides ---- */
+@media (max-width: 1023px) {
+  /* Smooth momentum scrolling for horizontal overflow on iOS */
+  .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+
+  /* Prevent iOS zoom on input focus (inputs must be >= 16px) */
+  input, textarea, select { font-size: 16px !important; }
 }

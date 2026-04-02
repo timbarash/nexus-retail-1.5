@@ -53,7 +53,7 @@ export default function StoreSelector() {
 
       {open && (
         <div className="absolute right-0 top-full mt-1 w-80 max-h-[70vh] rounded-xl border border-surface-border bg-surface-card shadow-xl z-50 flex flex-col animate-fade-in">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-surface-border">
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-surface-divider">
             <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">Store Filter</span>
             <div className="flex items-center gap-2">
               <button onClick={selectAll} className="text-[10px] font-medium text-accent-blue hover:brightness-110 transition-colors">

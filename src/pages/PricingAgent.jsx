@@ -1,5 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import NexusIcon from '../components/NexusIcon';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useNexusState } from '../contexts/NexusStateContext';
+import { TiltCard } from '../components/common/TiltCard';
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip,
   ResponsiveContainer, ReferenceLine, ZAxis, Cell
@@ -14,6 +17,7 @@ import {
 } from 'lucide-react';
 import { generatePricingResponse, generatePricingAnalysis, generateMarketingCampaignPlan, isGeminiAvailable } from '../utils/gemini';
 import ConfirmationDrawer from '../components/common/ConfirmationDrawer';
+import { useActionLog } from '../contexts/ActionLogContext';
 import { CampaignPlan } from './MarketingCampaigns';
 import { useStores } from '../contexts/StoreContext';
 import { locations } from '../data/mockData';
@@ -69,12 +73,12 @@ const PROMOTIONS = [
    ═══════════════════════════════════════════════════════════════════ */
 
 const SUGGESTIONS = [
-  { id: 'market_comparison', icon: Scale, color: 'var(--color-accent-blue)', label: 'Market Price Comparison', desc: 'See how your prices compare to market in your region', confidence: 'high' },
-  { id: 'price_cost_overview', icon: DollarSign, color: 'var(--color-accent-green)', label: 'Price & Cost Overview', desc: 'Gross prices, costs, and net revenue by product' },
-  { id: 'discount_review', icon: Percent, color: 'var(--color-accent-gold)', label: 'Discount & Promo Review', desc: 'Performance of all your active discounts', confidence: 'medium' },
-  { id: 'price_scenarios', icon: Calculator, color: 'var(--color-accent-purple)', label: 'What-If Pricing', desc: 'Model price changes and see projected impact' },
-  { id: 'change_prices', icon: ArrowUpDown, color: 'var(--color-accent-blue)', label: 'Change Prices', desc: 'Select products and update prices now', confidence: 'high' },
-  { id: 'create_discount', icon: Plus, color: 'var(--color-accent-red)', label: 'Create New Discount', desc: 'Set up a new promo and optionally launch a campaign' },
+  { id: 'price_scenarios', icon: Calculator, color: 'var(--color-accent-purple)', label: 'What-If Pricing', desc: 'Model price changes and see projected impact on revenue and margin', tag: 'Modeling', tagColor: 'var(--color-accent-purple)' },
+  { id: 'market_comparison', icon: Scale, color: 'var(--color-accent-blue)', label: 'Market Price Comparison', desc: 'See how your prices compare to market in your region', confidence: 'high', tag: 'Intelligence', tagColor: 'var(--color-accent-blue)' },
+  { id: 'discount_review', icon: Percent, color: 'var(--color-accent-gold)', label: 'Discount & Promo Review', desc: 'Performance of all active discounts — connects to your portfolio discount rate', confidence: 'medium', tag: 'Review', tagColor: 'var(--color-accent-gold)' },
+  { id: 'price_cost_overview', icon: DollarSign, color: 'var(--color-accent-green)', label: 'Price & Cost Overview', desc: 'Gross prices, costs, and net revenue by product', tag: 'Analysis', tagColor: 'var(--color-accent-green)' },
+  { id: 'change_prices', icon: ArrowUpDown, color: 'var(--color-accent-blue)', label: 'Change Prices', desc: 'Select products and update prices now', confidence: 'high', tag: 'Action', tagColor: 'var(--color-accent-blue)' },
+  { id: 'create_discount', icon: Plus, color: 'var(--color-accent-red)', label: 'Create New Discount', desc: 'Set up a new promo and optionally launch a campaign', tag: 'Action', tagColor: 'var(--color-accent-red)' },
 ];
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -100,25 +104,25 @@ export function MarketComparisonView({ data, onBack }) {
   const recBg = { raise: 'color-mix(in srgb, var(--color-accent-green) 12%, transparent)', lower: 'color-mix(in srgb, var(--color-accent-red) 12%, transparent)', keep: 'color-mix(in srgb, var(--color-text-muted) 8%, transparent)' };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {onBack && (
         <button onClick={onBack} className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-2">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-accent-blue/12 flex items-center justify-center">
-          <Scale className="w-5 h-5 text-accent-blue" />
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className="w-7 h-7 rounded-lg bg-accent-blue/12 flex items-center justify-center">
+          <Scale className="w-4 h-4 text-accent-blue" />
         </div>
         <div>
-          <h3 className="text-text-primary font-semibold text-lg">{data?.title || 'Market Price Comparison'}</h3>
-          <p className="text-text-secondary text-sm">{data?.subtitle || 'Your prices vs the market in your region'}</p>
+          <h3 className="text-text-primary font-semibold text-sm">{data?.title || 'Market Price Comparison'}</h3>
+          <p className="text-text-secondary text-xs">{data?.subtitle || 'Your prices vs the market in your region'}</p>
         </div>
       </div>
 
       {/* Category comparison */}
-      <div className="bg-surface-bg rounded-xl border border-surface-border p-4">
-        <p className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-3">Category Avg Price vs Regional Market</p>
+      <div className="bg-surface-bg rounded-lg border border-surface-border p-3">
+        <p className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-2">Category Avg Price vs Regional Market</p>
         <div className="space-y-2.5">
           {categoryComparison.map((c) => {
             const gapNum = parseFloat(c.gap);
@@ -147,18 +151,18 @@ export function MarketComparisonView({ data, onBack }) {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-surface-border">
-                <th className="text-left text-text-secondary font-medium px-4 py-3">Product</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Your Price</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Market Avg</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Market Range</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Gap</th>
-                <th className="text-center text-text-secondary font-medium px-4 py-3">Action</th>
+              <tr className="border-b border-surface-divider">
+                <th className="text-left text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Product</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Your Price</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Market Avg</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Market Range</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Gap</th>
+                <th className="text-center text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Action</th>
               </tr>
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-b border-surface-border hover:bg-surface-card transition-colors">
+                <tr key={p.id} className="border-b border-surface-divider hover:bg-surface-card transition-colors">
                   <td className="px-4 py-3">
                     <span className="text-text-primary font-medium">{p.name}</span>
                     <span className="text-text-secondary text-xs ml-2">{p.brand}</span>
@@ -211,25 +215,25 @@ export function PriceCostView({ data, onBack }) {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {onBack && (
         <button onClick={onBack} className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-2">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-accent-green/12 flex items-center justify-center">
-          <DollarSign className="w-5 h-5 text-accent-green" />
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className="w-7 h-7 rounded-lg bg-accent-green/12 flex items-center justify-center">
+          <DollarSign className="w-4 h-4 text-accent-green" />
         </div>
         <div>
-          <h3 className="text-text-primary font-semibold text-lg">{data?.title || 'Price & Cost Overview'}</h3>
-          <p className="text-text-secondary text-sm">{data?.subtitle || 'Gross prices, costs, and net revenue by product'}</p>
+          <h3 className="text-text-primary font-semibold text-sm">{data?.title || 'Price & Cost Overview'}</h3>
+          <p className="text-text-secondary text-xs">{data?.subtitle || 'Gross prices, costs, and net revenue by product'}</p>
         </div>
       </div>
 
       {/* Category breakdown */}
-      <div className="bg-surface-bg rounded-xl border border-surface-border p-4">
-        <p className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-3">Category Pricing Breakdown</p>
+      <div className="bg-surface-bg rounded-lg border border-surface-border p-3">
+        <p className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-2">Category Pricing Breakdown</p>
         <div className="space-y-2.5">
           {categoryBreakdown.map((c) => (
             <div key={c.category} className="flex items-center gap-3">
@@ -252,18 +256,18 @@ export function PriceCostView({ data, onBack }) {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-surface-border">
-                <th className="text-left text-text-secondary font-medium px-4 py-3">Product</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Gross Price</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Cost</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Net / Unit</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Weekly Units</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-3">Weekly Net</th>
+              <tr className="border-b border-surface-divider">
+                <th className="text-left text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Product</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Gross Price</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Cost</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Net / Unit</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Weekly Units</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-3">Weekly Net</th>
               </tr>
             </thead>
             <tbody>
               {products.map((p, i) => (
-                <tr key={i} className="border-b border-surface-border hover:bg-surface-card transition-colors">
+                <tr key={i} className="border-b border-surface-divider hover:bg-surface-card transition-colors">
                   <td className="px-4 py-3">
                     <span className="text-text-primary font-medium">{p.name}</span>
                     <span className="text-text-secondary text-xs ml-2">{p.brand}</span>
@@ -281,10 +285,10 @@ export function PriceCostView({ data, onBack }) {
       </div>
 
       {/* Suggestions */}
-      <div className="bg-surface-bg rounded-xl border border-surface-border p-4">
-        <p className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-3">Pricing Suggestions</p>
+      <div className="bg-surface-bg rounded-lg border border-surface-border p-3">
+        <p className="text-text-secondary text-xs font-semibold uppercase tracking-wider mb-2">Pricing Suggestions</p>
         {suggestions.map((s, i) => (
-          <div key={i} className="flex items-start gap-3 py-2.5 border-b border-surface-border last:border-0">
+          <div key={i} className="flex items-start gap-3 py-2.5 border-b border-surface-divider last:border-0">
             <CheckCircle2 className="w-4 h-4 text-accent-green mt-0.5 flex-shrink-0" />
             <div className="flex-1">
               <p className="text-text-primary text-sm">{s.action}</p>
@@ -318,37 +322,37 @@ export function DiscountReviewView({ data, onBack }) {
   const verdictBg = { Keep: 'color-mix(in srgb, var(--color-accent-green) 12%, transparent)', Optimize: 'color-mix(in srgb, var(--color-accent-gold) 12%, transparent)', Kill: 'color-mix(in srgb, var(--color-accent-red) 12%, transparent)' };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {onBack && (
         <button onClick={onBack} className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-2">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-accent-gold/12 flex items-center justify-center">
-          <Percent className="w-5 h-5 text-accent-gold" />
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className="w-7 h-7 rounded-lg bg-accent-gold/12 flex items-center justify-center">
+          <Percent className="w-4 h-4 text-accent-gold" />
         </div>
         <div>
-          <h3 className="text-text-primary font-semibold text-lg">{data?.title || 'Discount & Promo Review'}</h3>
-          <p className="text-text-secondary text-sm">{data?.subtitle || 'Performance of all your active discounts'}</p>
+          <h3 className="text-text-primary font-semibold text-sm">{data?.title || 'Discount & Promo Review'}</h3>
+          <p className="text-text-secondary text-xs">{data?.subtitle || 'Performance of all your active discounts'}</p>
         </div>
       </div>
 
       {/* Summary metrics */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-surface-bg rounded-xl border border-surface-border p-4 text-center">
+      <div className="grid grid-cols-3 gap-2">
+        <div className="bg-surface-bg rounded-lg border border-surface-border p-3 text-center">
           <p className="text-text-secondary text-xs mb-1">Total Discount Spend</p>
-          <p className="text-text-primary text-xl font-bold">{totalSpend}</p>
+          <p className="text-text-primary text-lg font-bold">{totalSpend}</p>
           <p className="text-text-muted text-[10px]">per month</p>
         </div>
-        <div className="bg-surface-bg rounded-xl border border-surface-border p-4 text-center">
+        <div className="bg-surface-bg rounded-lg border border-surface-border p-3 text-center">
           <p className="text-text-secondary text-xs mb-1">Wasted Spend</p>
-          <p className="text-accent-red text-xl font-bold">{wastedSpend}</p>
+          <p className="text-accent-red text-lg font-bold">{wastedSpend}</p>
           <p className="text-text-muted text-[10px]">no measurable ROI</p>
         </div>
-        <div className="bg-surface-bg rounded-xl border border-surface-border p-4 text-center">
+        <div className="bg-surface-bg rounded-lg border border-surface-border p-3 text-center">
           <p className="text-text-secondary text-xs mb-1">Avg ROI</p>
-          <p className="text-accent-gold text-xl font-bold">{avgROI}</p>
+          <p className="text-accent-gold text-lg font-bold">{avgROI}</p>
           <p className="text-text-muted text-[10px]">across all promos</p>
         </div>
       </div>
@@ -356,8 +360,8 @@ export function DiscountReviewView({ data, onBack }) {
       {/* Promo cards */}
       <div className="space-y-3">
         {promotions.map((p, i) => (
-          <div key={i} className="bg-surface-bg rounded-xl border border-surface-border p-4">
-            <div className="flex items-center justify-between mb-3">
+          <div key={i} className="bg-surface-bg rounded-lg border border-surface-border p-3">
+            <div className="flex items-center justify-between mb-2">
               <div>
                 <span className="text-text-primary font-medium">{p.name}</span>
                 <span className="text-text-muted text-xs ml-2">{p.type}</span>
@@ -437,24 +441,24 @@ export function PriceScenariosView({ data, onBack }) {
   const riskColor = { Low: 'var(--color-accent-green)', Medium: 'var(--color-accent-gold)', High: 'var(--color-accent-red)' };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {onBack && (
         <button onClick={onBack} className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-2">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-accent-purple/12 flex items-center justify-center">
-          <Calculator className="w-5 h-5 text-accent-purple" />
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className="w-7 h-7 rounded-lg bg-accent-purple/12 flex items-center justify-center">
+          <Calculator className="w-4 h-4 text-accent-purple" />
         </div>
         <div>
-          <h3 className="text-text-primary font-semibold text-lg">{data?.title || 'What-If Pricing Scenarios'}</h3>
-          <p className="text-text-secondary text-sm">{data?.subtitle || 'Model price changes and see projected revenue impact'}</p>
+          <h3 className="text-text-primary font-semibold text-sm">{data?.title || 'What-If Pricing Scenarios'}</h3>
+          <p className="text-text-secondary text-xs">{data?.subtitle || 'Model price changes and see projected revenue impact'}</p>
         </div>
       </div>
 
       {scenarios.map((s, i) => (
-        <div key={i} className={`bg-surface-bg rounded-xl border ${s.recommended ? 'border-accent-green' : 'border-surface-border'} p-4 hover:border-surface-border transition-colors`}>
+        <div key={i} className={`bg-surface-bg rounded-lg border ${s.recommended ? 'border-accent-green' : 'border-surface-border'} p-3 hover:border-surface-border transition-colors`}>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <span className="text-text-primary font-semibold">{s.name}</span>
@@ -521,6 +525,7 @@ export function PriceScenariosView({ data, onBack }) {
 
 // ─── Change Prices ───
 export function ChangePricesView({ data, onBack }) {
+  const { logAction } = useActionLog();
   const initialChanges = data?.changes?.length ? data.changes : PRICING_PRODUCTS.filter(p => Math.abs(p.grossPrice - p.marketAvg) / p.marketAvg > 0.03).map(p => {
     const target = p.grossPrice > p.marketAvg ? Math.round(p.marketAvg * 1.02) : Math.round(p.marketAvg * 0.98);
     const diff = target - p.grossPrice;
@@ -557,19 +562,19 @@ export function ChangePricesView({ data, onBack }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {onBack && (
         <button onClick={onBack} className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-2">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-accent-blue/12 flex items-center justify-center">
-          <ArrowUpDown className="w-5 h-5 text-accent-blue" />
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className="w-7 h-7 rounded-lg bg-accent-blue/12 flex items-center justify-center">
+          <ArrowUpDown className="w-4 h-4 text-accent-blue" />
         </div>
         <div>
-          <h3 className="text-text-primary font-semibold text-lg">{data?.title || 'Change Prices'}</h3>
-          <p className="text-text-secondary text-sm">{data?.subtitle || 'Select products, preview impact, and apply changes'}</p>
+          <h3 className="text-text-primary font-semibold text-sm">{data?.title || 'Change Prices'}</h3>
+          <p className="text-text-secondary text-xs">{data?.subtitle || 'Select products, preview impact, and apply changes'}</p>
         </div>
       </div>
 
@@ -578,7 +583,7 @@ export function ChangePricesView({ data, onBack }) {
           <div
             key={c.id}
             onClick={() => !applied && toggleSelect(c.id)}
-            className={`bg-surface-bg rounded-xl border p-4 transition-all cursor-pointer ${selected.has(c.id) ? 'border-accent-green bg-accent-green/[0.04]' : 'border-surface-border hover:border-surface-border'}`}
+            className={`bg-surface-bg rounded-lg border p-3 transition-all cursor-pointer ${selected.has(c.id) ? 'border-accent-green bg-accent-green/[0.04]' : 'border-surface-border hover:border-surface-border'}`}
           >
             <div className="flex items-center gap-3">
               <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${selected.has(c.id) ? 'bg-accent-green border-accent-green' : 'border-surface-border'}`}>
@@ -648,7 +653,16 @@ export function ChangePricesView({ data, onBack }) {
             <ConfirmationDrawer
               open={showConfirm}
               onCancel={() => setShowConfirm(false)}
-              onConfirm={() => { setShowConfirm(false); setApplied(true); }}
+              onConfirm={() => {
+                setShowConfirm(false);
+                setApplied(true);
+                logAction({
+                  type: 'price_change',
+                  agent: 'Pricing Agent',
+                  description: `Price changes applied — ${activeChanges.length} products updated`,
+                  detail: `Est. revenue impact: ${totalRevenueImpact}`,
+                });
+              }}
               title="Confirm Price Changes"
               description={`Updating prices for ${activeChanges.length} products across all stores`}
               icon={DollarSign}
@@ -664,9 +678,28 @@ export function ChangePricesView({ data, onBack }) {
             />
           </>
         ) : (
-          <span className="flex items-center gap-2 text-accent-green font-semibold text-sm">
-            <CheckCircle2 className="w-4 h-4" /> Prices Updated
-          </span>
+          <div className="flex flex-col gap-3">
+            <span className="flex items-center gap-2 text-accent-green font-semibold text-sm">
+              <CheckCircle2 className="w-4 h-4" /> Prices Updated
+            </span>
+            <div className="rounded-xl border border-surface-border bg-surface-bg divide-y divide-surface-divider">
+              <div className="flex items-center justify-between px-4 py-2.5">
+                <span className="text-[11px] text-text-muted">Products Updated</span>
+                <span className="text-[12px] font-medium text-text-primary">{activeChanges.length}</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5">
+                <span className="text-[11px] text-text-muted">Est. Revenue Impact</span>
+                <span className="text-[12px] font-semibold text-accent-green">{totalRevenueImpact}</span>
+              </div>
+              <div className="flex items-center justify-between px-4 py-2.5">
+                <span className="text-[11px] text-text-muted">Pushed to POS</span>
+                <span className="text-[12px] font-medium text-text-primary">All locations</span>
+              </div>
+            </div>
+            <p className="text-[11px] text-accent-blue cursor-pointer hover:underline" onClick={() => { const btn = document.querySelector('[aria-label="Action log"]'); if (btn) btn.click(); }}>
+              View in Action Log
+            </p>
+          </div>
         )}
       </div>
     </div>
@@ -705,34 +738,34 @@ export function CreateDiscountView({ data, onBack }) {
   const hasPreset = !!discountData;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {onBack && (
         <button onClick={onBack} className="flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors mb-2">
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-accent-red/12 flex items-center justify-center">
-          <Plus className="w-5 h-5 text-accent-red" />
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className="w-7 h-7 rounded-lg bg-accent-red/12 flex items-center justify-center">
+          <Plus className="w-4 h-4 text-accent-red" />
         </div>
         <div>
-          <h3 className="text-text-primary font-semibold text-lg">{data?.title || 'Create New Discount'}</h3>
-          <p className="text-text-secondary text-sm">{data?.subtitle || 'Set up a new promo and optionally launch a marketing campaign'}</p>
+          <h3 className="text-text-primary font-semibold text-sm">{data?.title || 'Create New Discount'}</h3>
+          <p className="text-text-secondary text-xs">{data?.subtitle || 'Set up a new promo and optionally launch a marketing campaign'}</p>
         </div>
       </div>
 
       {!created ? (
-        <div className="bg-surface-bg rounded-xl border border-surface-border p-5 space-y-4">
+        <div className="bg-surface-bg rounded-xl border border-surface-border p-3.5 space-y-3">
           <div>
             <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider block mb-1.5">Discount Name</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Summer Sale 15% Off"
-              className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-blue transition-colors" />
+              className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-green transition-colors" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider block mb-1.5">Type</label>
               <select value={type} onChange={e => setType(e.target.value)}
-                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-accent-blue">
+                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-accent-green">
                 <option>Percentage</option>
                 <option>Dollar Off</option>
                 <option>BOGO</option>
@@ -742,14 +775,14 @@ export function CreateDiscountView({ data, onBack }) {
             <div>
               <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider block mb-1.5">Amount</label>
               <input type="text" value={amount} onChange={e => setAmount(e.target.value)} placeholder="e.g. 15% off or $5 off"
-                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-blue" />
+                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary placeholder-text-muted outline-none focus:border-accent-green" />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider block mb-1.5">Applies To</label>
               <select value={appliesTo} onChange={e => setAppliesTo(e.target.value)}
-                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-accent-blue">
+                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-accent-green">
                 <option>All Products</option>
                 <option>Flower</option>
                 <option>Edibles</option>
@@ -761,7 +794,7 @@ export function CreateDiscountView({ data, onBack }) {
             <div>
               <label className="text-text-secondary text-xs font-semibold uppercase tracking-wider block mb-1.5">Schedule</label>
               <select value={schedule} onChange={e => setSchedule(e.target.value)}
-                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-accent-blue">
+                className="w-full bg-surface-card border border-surface-border rounded-lg px-3 py-2 text-sm text-text-primary outline-none focus:border-accent-green">
                 <option>Always active</option>
                 <option>Weekdays 4-7pm</option>
                 <option>Weekends only</option>
@@ -785,7 +818,7 @@ export function CreateDiscountView({ data, onBack }) {
           </button>
         </div>
       ) : (
-        <div className="bg-accent-green/[0.08] rounded-xl border border-accent-green/20 p-5">
+        <div className="bg-accent-green/[0.08] rounded-xl border border-accent-green/20 p-3.5">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle2 className="w-5 h-5 text-accent-green" />
             <span className="text-accent-green font-semibold">Discount Created</span>
@@ -801,7 +834,7 @@ export function CreateDiscountView({ data, onBack }) {
 
       {/* Campaign prompt */}
       {showCampaignPrompt && (
-        <div className="bg-surface-card rounded-xl border border-accent-blue p-5">
+        <div className="bg-surface-card rounded-xl border border-accent-blue p-3.5">
           <div className="flex items-center gap-2 mb-3">
             <Megaphone className="w-5 h-5 text-accent-blue" />
             <span className="text-text-primary font-semibold">Promote this discount?</span>
@@ -815,7 +848,7 @@ export function CreateDiscountView({ data, onBack }) {
               <Megaphone className="w-4 h-4" /> Yes, Create Campaign
             </button>
             <button onClick={() => setShowCampaignPrompt(false)}
-              className="px-5 py-2 rounded-lg text-sm font-semibold bg-surface-hover text-text-secondary hover:text-text-primary hover:bg-surface-hover transition-colors">
+              className="px-5 py-2 rounded-lg text-sm font-semibold bg-surface-muted border border-surface-border text-text-secondary hover:text-text-primary hover:bg-surface-hover transition-colors">
               No, Skip
             </button>
           </div>
@@ -929,7 +962,7 @@ function PricingDashboard() {
             </div>
             Pricing Tool
           </h1>
-          <p className="text-text-secondary mt-1">Understand your pricing, compare to market, and make changes fast — {selectionLabel}</p>
+          <p className="text-sm text-text-secondary mt-1">Understand your pricing, compare to market, and make changes fast — {selectionLabel}</p>
         </div>
         <Link to="/agents/pricing" className="px-4 py-2 rounded-lg bg-accent-green text-white font-semibold text-sm hover:bg-accent-green/85 transition-colors flex items-center gap-2">
           <Bot className="w-4 h-4" /> Open Pricing Agent
@@ -946,7 +979,7 @@ function PricingDashboard() {
         ].map((kpi) => (
           <div key={kpi.label} className="bg-surface-card rounded-xl border border-surface-border p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-text-secondary text-sm">{kpi.label}</span>
+              <span className="text-xs font-medium text-text-secondary uppercase tracking-wider">{kpi.label}</span>
               <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `color-mix(in srgb, ${kpi.color} 8%, transparent)` }}>
                 <kpi.icon className="w-4 h-4" style={{ color: kpi.color }} />
               </div>
@@ -973,14 +1006,14 @@ function PricingDashboard() {
         <div className="h-[320px] mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: 10 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-border)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-divider)" />
               <XAxis
                 type="number" dataKey="x" name="Market Avg"
                 domain={[minPrice, maxPrice]}
                 tick={{ fill: 'var(--color-text-muted)', fontSize: 11 }}
                 tickFormatter={v => `$${v}`}
                 label={{ value: 'Market Avg Price', position: 'bottom', offset: 0, fill: 'var(--color-text-secondary)', fontSize: 11 }}
-                stroke="var(--color-surface-border)"
+                stroke="var(--color-surface-divider)"
               />
               <YAxis
                 type="number" dataKey="y" name="Your Price"
@@ -988,7 +1021,7 @@ function PricingDashboard() {
                 tick={{ fill: 'var(--color-text-muted)', fontSize: 11 }}
                 tickFormatter={v => `$${v}`}
                 label={{ value: 'Your Price', angle: -90, position: 'insideLeft', offset: 10, fill: 'var(--color-text-secondary)', fontSize: 11 }}
-                stroke="var(--color-surface-border)"
+                stroke="var(--color-surface-divider)"
               />
               <ZAxis type="number" dataKey="z" range={[80, 400]} name="Weekly Units" />
               <RechartsTooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3', stroke: 'var(--color-text-muted)' }} />
@@ -1092,21 +1125,21 @@ function PricingDashboard() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-surface-border">
-                <th className="text-left text-text-secondary font-medium px-4 py-2">Product</th>
-                <th className="text-left text-text-secondary font-medium px-4 py-2">Category</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-2">Your Price</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-2">Market Avg</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-2">Cost</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-2">Net / Unit</th>
-                <th className="text-right text-text-secondary font-medium px-4 py-2">Gap</th>
+              <tr className="border-b border-surface-divider">
+                <th className="text-left text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-2">Product</th>
+                <th className="text-left text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-2">Category</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-2">Your Price</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-2">Market Avg</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-2">Cost</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-2">Net / Unit</th>
+                <th className="text-right text-xs font-semibold text-text-secondary uppercase tracking-wider px-4 py-2">Gap</th>
               </tr>
             </thead>
             <tbody>
               {PRICING_PRODUCTS.map((p) => {
                 const gap = ((p.grossPrice - p.marketAvg) / p.marketAvg * 100);
                 return (
-                  <tr key={p.id} className="border-b border-surface-border hover:bg-surface-bg transition-colors">
+                  <tr key={p.id} className="border-b border-surface-divider hover:bg-surface-bg transition-colors">
                     <td className="px-4 py-2.5">
                       <span className="text-text-primary font-medium">{p.name}</span>
                       <span className="text-text-muted text-xs ml-2">{p.brand}</span>
@@ -1138,7 +1171,7 @@ function PricingDashboard() {
             {PROMOTIONS.map((p) => {
               const vc = { Keep: 'var(--color-accent-green)', Optimize: 'var(--color-accent-gold)', Kill: 'var(--color-accent-red)' };
               return (
-                <div key={p.name} className="flex items-center justify-between py-2 border-b border-surface-border last:border-0">
+                <div key={p.name} className="flex items-center justify-between py-2 border-b border-surface-divider last:border-0">
                   <div>
                     <span className="text-text-primary font-medium text-sm">{p.name}</span>
                     <p className="text-text-muted text-xs">{p.discountAmount} · {p.redemptions} redemptions</p>
@@ -1207,15 +1240,43 @@ function PricingDashboard() {
    PRICING AGENT CHAT (mode === 'agent')
    ═══════════════════════════════════════════════════════════════════ */
 
+function TypingIndicator() {
+  return (
+    <div className="flex items-start gap-3 animate-fade-in">
+      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-surface-bg)', border: '1px solid color-mix(in srgb, var(--color-accent-gold) 20%, transparent)' }}>
+        <NexusIcon size={16} />
+      </div>
+      <div className="bg-surface-card/80 border border-surface-border/60 rounded-2xl rounded-tl-sm px-4 py-2.5">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-accent-green/60 animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-2 h-2 rounded-full bg-accent-green/60 animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-2 h-2 rounded-full bg-accent-green/60 animate-bounce" style={{ animationDelay: '300ms' }} />
+          <span className="text-[10px] text-text-muted ml-1 font-medium">Analyzing...</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PricingAgentChat() {
+  const { startThinking, stopThinking } = useNexusState();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
+  // Sync NexusIcon thinking state with isTyping
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isTyping) startThinking();
+    else stopThinking();
+    return () => stopThinking();
+  }, [isTyping, startThinking, stopThinking]);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages, isTyping]);
 
   const viewComponents = {
@@ -1230,29 +1291,41 @@ function PricingAgentChat() {
   const handleSuggestion = async (suggestion) => {
     setMessages(prev => [...prev, { role: 'user', text: suggestion.label }]);
     setIsTyping(true);
+
+    // Show fallback view immediately with static data after brief UX delay
     await new Promise(r => setTimeout(r, 800));
-
-    let analysis = null;
-    if (isGeminiAvailable()) {
-      analysis = await generatePricingAnalysis(suggestion.label);
-    }
-
     setIsTyping(false);
+    setMessages(prev => [...prev, {
+      role: 'agent',
+      text: `Here's your **${suggestion.label}** based on current data:`,
+      component: suggestion.id,
+      data: null,
+    }]);
 
-    if (analysis && analysis.title) {
-      setMessages(prev => [...prev, {
-        role: 'agent',
-        text: `Here's your **${analysis.title}** analysis:`,
-        component: analysis.workflowType,
-        data: analysis,
-      }]);
-    } else {
-      setMessages(prev => [...prev, {
-        role: 'agent',
-        text: `Here's your **${suggestion.label}** based on current data:`,
-        component: suggestion.id,
-        data: null,
-      }]);
+    // Then try to enhance with AI data in the background
+    if (isGeminiAvailable()) {
+      try {
+        const analysis = await generatePricingAnalysis(suggestion.label);
+        if (analysis && analysis.title) {
+          setMessages(prev => {
+            // Replace the last agent message with AI-enhanced version
+            const updated = [...prev];
+            const lastAgentIdx = updated.map(m => m.role).lastIndexOf('agent');
+            if (lastAgentIdx >= 0) {
+              updated[lastAgentIdx] = {
+                role: 'agent',
+                text: `Here's your **${analysis.title}** analysis:`,
+                component: analysis.workflowType,
+                data: analysis,
+              };
+            }
+            return updated;
+          });
+        }
+      } catch (err) {
+        console.error('[PricingAgent] AI enhancement failed:', err);
+        // Fallback view is already showing — no action needed
+      }
     }
   };
 
@@ -1264,49 +1337,59 @@ function PricingAgentChat() {
     setIsTyping(true);
     await new Promise(r => setTimeout(r, 600));
 
-    // Try structured analysis first
-    let analysis = null;
-    if (isGeminiAvailable()) {
-      analysis = await generatePricingAnalysis(text);
-    }
-
-    if (analysis && analysis.title) {
-      setIsTyping(false);
-      setMessages(prev => [...prev, {
-        role: 'agent',
-        text: `Here's your **${analysis.title}** analysis:`,
-        component: analysis.workflowType,
-        data: analysis,
-      }]);
-      return;
-    }
-
-    // Fall back to text response
-    let responseText = null;
-    if (isGeminiAvailable()) {
-      responseText = await generatePricingResponse(text);
-    }
+    // Show fallback view immediately based on keywords
+    const lower = text.toLowerCase();
+    let fallbackComponent = 'market_comparison';
+    if (/cost|net|gross|revenue per/.test(lower)) fallbackComponent = 'price_cost_overview';
+    else if (/discount|promo|coupon|roi|deal/.test(lower)) fallbackComponent = 'discount_review';
+    else if (/scenario|what.if|model|simul/.test(lower)) fallbackComponent = 'price_scenarios';
+    else if (/change|raise|lower|adjust|update.*price/.test(lower)) fallbackComponent = 'change_prices';
+    else if (/create|new|add.*discount|new.*promo|set up/.test(lower)) fallbackComponent = 'create_discount';
 
     setIsTyping(false);
+    setMessages(prev => [...prev, {
+      role: 'agent',
+      text: `Here's a pricing analysis based on your current data:`,
+      component: fallbackComponent,
+      data: null,
+    }]);
 
-    if (responseText) {
-      setMessages(prev => [...prev, { role: 'agent', text: responseText }]);
-    } else {
-      // Keyword-based fallback
-      const lower = text.toLowerCase();
-      let fallbackComponent = 'market_comparison';
-      if (/cost|net|gross|revenue per/.test(lower)) fallbackComponent = 'price_cost_overview';
-      else if (/discount|promo|coupon|roi|deal/.test(lower)) fallbackComponent = 'discount_review';
-      else if (/scenario|what.if|model|simul/.test(lower)) fallbackComponent = 'price_scenarios';
-      else if (/change|raise|lower|adjust|update.*price/.test(lower)) fallbackComponent = 'change_prices';
-      else if (/create|new|add.*discount|new.*promo|set up/.test(lower)) fallbackComponent = 'create_discount';
+    // Then try to enhance with AI in the background
+    if (isGeminiAvailable()) {
+      try {
+        const analysis = await generatePricingAnalysis(text);
+        if (analysis && analysis.title) {
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastAgentIdx = updated.map(m => m.role).lastIndexOf('agent');
+            if (lastAgentIdx >= 0) {
+              updated[lastAgentIdx] = {
+                role: 'agent',
+                text: `Here's your **${analysis.title}** analysis:`,
+                component: analysis.workflowType,
+                data: analysis,
+              };
+            }
+            return updated;
+          });
+          return;
+        }
 
-      setMessages(prev => [...prev, {
-        role: 'agent',
-        text: `Here's a pricing analysis based on your current data:`,
-        component: fallbackComponent,
-        data: null,
-      }]);
+        // Fall back to text response if structured analysis failed
+        const responseText = await generatePricingResponse(text);
+        if (responseText) {
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastAgentIdx = updated.map(m => m.role).lastIndexOf('agent');
+            if (lastAgentIdx >= 0) {
+              updated[lastAgentIdx] = { role: 'agent', text: responseText };
+            }
+            return updated;
+          });
+        }
+      } catch (err) {
+        console.error('[PricingAgent] AI enhancement failed:', err);
+      }
     }
   };
 
@@ -1317,107 +1400,93 @@ function PricingAgentChat() {
     }
   };
 
-  const showSuggestions = messages.length === 0;
-
   return (
-    <div className="max-w-4xl mx-auto flex flex-col h-[calc(100vh-12rem)]">
+    <div className="max-w-4xl mx-auto flex flex-col flex-1 min-h-0 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent-green to-accent-blue flex items-center justify-center shadow-lg">
-          <DollarSign className="w-6 h-6 text-white" />
+      <div className="flex items-center gap-2.5 mb-4">
+        <div className="w-8 h-8 rounded-lg bg-accent-green/10 flex items-center justify-center">
+          <CircleDollarSign className="w-4 h-4 text-accent-green" />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-text-primary">Pricing Agent</h1>
-          <p className="text-text-secondary text-sm">Understand your pricing, compare to market, make changes</p>
+          <h1 className="text-xl lg:text-2xl font-bold text-text-primary">Pricing Agent</h1>
+          <p className="text-xs text-text-secondary">Pricing & Margins — Dutchie AI</p>
         </div>
-      </div>
-
-      {/* Pricing at a Glance */}
-      <div className="mb-6 grid grid-cols-2 lg:grid-cols-4 gap-3 stagger-grid">
-        {[
-          { label: 'Avg Price Gap', value: '+6%', sub: 'above market average', color: 'var(--color-accent-gold)', subColor: 'var(--color-text-secondary)' },
-          { label: 'Opportunity', value: '$4,200', sub: '/mo from 3 adjustments', color: 'var(--color-accent-green)', subColor: 'var(--color-text-secondary)' },
-          { label: 'Active Promos', value: '5', sub: '2 underperforming', color: 'var(--color-text-primary)', subColor: 'var(--color-accent-gold)' },
-          { label: 'Compliance', value: 'All Clear', sub: 'Prices within state limits', color: 'var(--color-accent-green)', subColor: 'var(--color-accent-green)' },
-        ].map(k => (
-          <div key={k.label} className="p-3 rounded-xl border border-surface-border border-l-[3px] bg-surface-card hover:brightness-110 transition-all" style={{ borderLeftColor: k.color }}>
-            <p className="text-[10px] uppercase tracking-wider text-text-secondary mb-1">{k.label}</p>
-            <p className="text-xl font-bold" style={{ color: k.color }}>{k.value}</p>
-            <p className="text-[10px]" style={{ color: k.subColor }}>{k.sub}</p>
-          </div>
-        ))}
       </div>
 
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
-        {showSuggestions && (
-          <div>
-            <p className="text-text-secondary text-sm mb-4">What would you like to do?</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 stagger-grid">
-              {SUGGESTIONS.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => handleSuggestion(s)}
-                  className="bg-surface-card rounded-xl border border-surface-border p-4 text-left hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] transition-all group"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `color-mix(in srgb, ${s.color} 8%, transparent)` }}>
-                      <s.icon className="w-4 h-4" style={{ color: s.color }} />
+        {messages.length === 0 && !isTyping && (
+          <div className="flex flex-col items-center justify-center py-6 lg:py-12" style={{ minHeight: 200 }}>
+            <div className="w-[60px] h-[60px] rounded-[18px] flex items-center justify-center mb-4" style={{ background: 'var(--color-surface-bg)', boxShadow: '0 0 24px color-mix(in srgb, var(--color-accent-gold) 15%, transparent), 0 0 8px color-mix(in srgb, var(--color-accent-gold) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-accent-gold) 20%, transparent)' }}>
+              <NexusIcon size={30} />
+            </div>
+            <h2 className="text-xl font-bold text-text-primary mb-1.5 text-center">Pricing Agent</h2>
+            <p className="text-[13px] text-text-secondary text-center max-w-[400px] leading-relaxed">
+              Optimize margins with market intelligence, competitive pricing, and dynamic discount strategies.
+            </p>
+          </div>
+        )}
+
+        {!isTyping && messages.length === 0 && (
+          <div className="pt-2 animate-fade-in">
+            <p className="text-xs text-text-secondary mb-3 ml-11">Try one of these scenarios</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ml-11">
+              {SUGGESTIONS.slice(0, 4).map((s) => (
+                <TiltCard key={s.id}>
+                  <button
+                    onClick={() => handleSuggestion(s)}
+                    className="group text-left w-full bg-surface-card border border-surface-border rounded-xl p-4 transition-all hover:brightness-110 active:scale-[0.98]"
+                  >
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `color-mix(in srgb, ${s.color} 12%, transparent)` }}>
+                        <s.icon className="w-4 h-4 text-text-primary" />
+                      </div>
+                      {s.tag && <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full border border-surface-border" style={{ color: s.tagColor }}>{s.tag}</span>}
                     </div>
-                    {s.confidence === 'high' && <span className="text-[9px] font-semibold text-accent-green bg-accent-green/10 px-1.5 py-0.5 rounded border border-accent-green/30">High Confidence</span>}
-                    {s.confidence === 'medium' && <span className="text-[9px] font-semibold text-accent-gold bg-accent-gold/10 px-1.5 py-0.5 rounded border border-dashed border-accent-gold/30">Review Suggested</span>}
-                  </div>
-                  <p className="text-text-primary font-medium text-sm mb-1">{s.label}</p>
-                  <p className="text-text-muted text-xs">{s.desc}</p>
-                </button>
+                    <p className="text-sm font-medium text-text-primary">{s.label}</p>
+                    <p className="text-xs text-text-secondary mt-0.5 leading-relaxed">{s.desc}</p>
+                  </button>
+                </TiltCard>
               ))}
             </div>
           </div>
         )}
 
         {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] ${msg.role === 'user'
-              ? 'bg-accent-green text-white rounded-2xl rounded-br-md px-4 py-3'
-              : 'bg-surface-card border border-surface-border text-text-primary rounded-2xl rounded-bl-md px-5 py-4'
-            }`}>
-              {msg.role === 'agent' && (
-                <div className="flex items-center gap-2 mb-2">
-                  <Bot className="w-4 h-4 text-accent-green" />
-                  <span className="text-accent-green text-xs font-semibold">Pricing Agent</span>
-                </div>
-              )}
-              <p className="text-sm whitespace-pre-wrap">{msg.text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => part.startsWith('**') && part.endsWith('**') ? <strong key={i}>{part.slice(2, -2)}</strong> : part)}</p>
+          <div key={i} className={`flex items-start gap-3 animate-fade-in ${msg.role === 'user' ? 'justify-end' : ''}`}>
+            {msg.role === 'agent' && (
+              <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-surface-bg)', border: '1px solid color-mix(in srgb, var(--color-accent-gold) 20%, transparent)' }}>
+                <NexusIcon size={16} />
+              </div>
+            )}
+            <div className={`max-w-2xl ${msg.role === 'user' ? '' : ''}`}>
+              <div className={`rounded-2xl px-5 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+                msg.role === 'user'
+                  ? 'bg-accent-gold/15 border border-accent-gold/20 text-text-primary rounded-tr-sm'
+                  : 'bg-surface-card/80 border border-surface-border/60 text-text-primary rounded-tl-sm'
+              }`}>
+              {msg.text.split(/(\*\*[^*]+\*\*)/g).map((part, j) => part.startsWith('**') && part.endsWith('**') ? <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong> : part)}
+              </div>
               {msg.component && viewComponents[msg.component] && (
                 <div className="mt-3">
-                  {React.createElement(viewComponents[msg.component], { data: msg.data, onBack: null })}
+                  <div className="max-w-[780px] mx-auto rounded-xl border border-surface-border bg-surface-card overflow-hidden overflow-x-auto">
+                    <div className="p-1">
+                      {React.createElement(viewComponents[msg.component], { data: msg.data, onBack: null })}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           </div>
         ))}
 
-        {isTyping && (
-          <div className="flex justify-start">
-            <div className="bg-surface-card border border-surface-border rounded-2xl rounded-bl-md px-5 py-4">
-              <div className="flex items-center gap-2">
-                <Bot className="w-4 h-4 text-accent-green" />
-                <span className="text-accent-green text-xs font-semibold">Pricing Agent</span>
-              </div>
-              <div className="flex gap-1.5 mt-2">
-                <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 rounded-full bg-text-muted animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
-          </div>
-        )}
+        {isTyping && <TypingIndicator />}
 
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
-      <div className="bg-surface-card rounded-2xl border border-surface-border p-3 flex items-center gap-3">
+      <div className="nexus-input-glass flex items-center gap-3 bg-surface-card border border-surface-border rounded-2xl px-5 py-3.5 shadow-card focus-within:border-accent-green/50 transition-all duration-200 mb-14 lg:mb-0">
         <input
           ref={inputRef}
           type="text"
@@ -1425,13 +1494,13 @@ function PricingAgentChat() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask about your prices, discounts, market comparison..."
-          className="flex-1 bg-transparent text-text-primary placeholder-text-muted outline-none text-sm"
+          className="flex-1 bg-transparent text-base lg:text-sm text-text-primary placeholder-text-muted outline-none"
           disabled={isTyping}
         />
         <button
           onClick={handleSend}
           disabled={!input.trim() || isTyping}
-          className="w-9 h-9 rounded-xl bg-accent-green text-white flex items-center justify-center hover:bg-accent-green/85 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-9 h-9 rounded-xl bg-accent-green flex items-center justify-center text-white disabled:opacity-30 hover:brightness-110 transition-all disabled:hover:bg-accent-green shadow-sm"
         >
           <Send className="w-4 h-4" />
         </button>

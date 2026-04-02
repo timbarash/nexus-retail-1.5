@@ -16,20 +16,21 @@ export default function NexusIcon({ size = 16, variant = 'gold', className = '',
   const id = useId();
   const gradId = `nexus-grad-${id}`;
   const outlined = variant === 'outlined';
+  const isWhite = variant === 'white';
   const viewBox = outlined ? '-3 -3 22 22' : '0 0 16 16';
-  const fill = outlined ? '#D4A03A' : `url(#${gradId})`;
+  const fill = isWhite ? '#FFFFFF' : outlined ? 'var(--color-accent-gold)' : `url(#${gradId})`;
 
   return (
-    <svg width={size} height={size} viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg" className={className} style={style}>
+    <svg width={size} height={size} viewBox={viewBox} fill="none" xmlns="http://www.w3.org/2000/svg" className={`nexus-icon ${className}`} style={style}>
       {PATHS.map((d, i) => (
         <path key={i} d={d} fill={fill} />
       ))}
       {!outlined && (
         <defs>
           <radialGradient id={gradId} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(8 8) rotate(90) scale(8)">
-            <stop offset="0.35" stopColor="#D4A03A" />
-            <stop offset="0.7" stopColor="#FFC02A" />
-            <stop offset="1" stopColor="#FFD666" />
+            <stop offset="0.35" stopColor="var(--color-accent-gold)" />
+            <stop offset="0.7" stopColor="var(--color-accent-gold)" />
+            <stop offset="1" stopColor="var(--color-nexus-icon-edge, #E8B44A)" />
           </radialGradient>
         </defs>
       )}

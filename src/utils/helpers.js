@@ -12,6 +12,27 @@ export function brandImg(path) {
 }
 
 /**
+ * Generate a consistent gradient color pair from a product/brand name.
+ * Used for gradient placeholders when product images are not available.
+ * @param {string} name - Product or brand name
+ * @returns {{ from: string, to: string }} CSS color values for gradient
+ */
+export function brandColor(name) {
+  if (!name) return { from: 'var(--color-accent-green)', to: 'var(--color-accent-blue)' };
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  const palettes = [
+    { from: 'var(--color-accent-green)', to: 'var(--color-accent-blue)' },
+    { from: 'var(--color-accent-gold)', to: 'var(--color-accent-red)' },
+    { from: 'var(--color-accent-purple)', to: 'var(--color-accent-blue)' },
+    { from: 'var(--color-accent-green)', to: 'var(--color-accent-gold)' },
+    { from: 'var(--color-accent-red)', to: 'var(--color-accent-purple)' },
+    { from: 'var(--color-accent-blue)', to: 'var(--color-accent-green)' },
+  ];
+  return palettes[Math.abs(hash) % palettes.length];
+}
+
+/**
  * Calculate average sentiment score from an array of reviews.
  * @param {Array} reviews - Array of review objects with sentimentScore
  * @returns {number} Average sentiment score, or 0 if no reviews

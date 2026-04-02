@@ -37,7 +37,7 @@ export default function TrendChart({ data, height = 300 }) {
             <stop offset="95%" stopColor="var(--color-accent-green)" stopOpacity={0.02} />
           </linearGradient>
         </defs>
-        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-border)" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-divider)" vertical={false} />
         <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--color-text-muted)' }} dy={8} />
         <YAxis domain={['auto', 'auto']} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--color-text-muted)' }} dx={-4} />
         <Tooltip content={<CustomTooltip />} />

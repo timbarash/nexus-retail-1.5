@@ -42,7 +42,7 @@ export default function MetricCard({
 
   return (
     <div
-      className={`bg-surface-card rounded-xl border border-surface-border p-4 hover:brightness-105 transition-all duration-200 cursor-default ${borderAccent ? 'border-l-[3px]' : ''}`}
+      className={`bg-surface-card rounded-xl border border-surface-border p-4 transition-all duration-200 ${borderAccent ? 'border-l-[3px]' : ''}`}
       style={{
         ...(borderAccent ? { borderLeftColor: cssVar } : {}),
         boxShadow: 'var(--shadow-card)',
@@ -68,7 +68,7 @@ export default function MetricCard({
       <p className="text-xl font-bold text-text-primary">{value}</p>
 
       <div className="flex items-center justify-between mt-1">
-        <p className="text-xs text-text-secondary">{title}</p>
+        <p className="text-xs font-medium text-text-secondary">{title}</p>
         {typeof trend === 'number' && (
           <span className={`flex items-center gap-0.5 text-xs font-medium ${trendPositive ? 'text-accent-green' : 'text-accent-red'}`}>
             {trendPositive ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
@@ -78,7 +78,7 @@ export default function MetricCard({
       </div>
 
       {benchmark && (
-        <div className="flex items-center justify-between mt-2 pt-2 border-t border-surface-border/40">
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-surface-divider">
           <span className="text-[12px] text-text-secondary">{benchmarkLabel || 'Avg'}: {benchmark}</span>
           {typeof trend === 'number' && (
             <span

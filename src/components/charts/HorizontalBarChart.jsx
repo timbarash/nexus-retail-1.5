@@ -62,7 +62,7 @@ export default function HorizontalBarChart({ data, height = 300 }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={data} layout="vertical" margin={{ top: 5, right: 20, left: 10, bottom: 5 }} barGap={0} barSize={20}>
-        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-border)" horizontal={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-divider)" horizontal={false} />
         <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: 'var(--color-text-muted)' }} />
         <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 13, fill: 'var(--color-text-primary)', fontWeight: 500 }} width={90} />
         <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />

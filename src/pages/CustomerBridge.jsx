@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TiltCard } from '../components/common/TiltCard';
 import { usePersona } from '../contexts/PersonaContext';
 import { useStores } from '../contexts/StoreContext';
+import { useNexusState } from '../contexts/NexusStateContext';
 import {
   Sparkles, Send, ChevronRight, Zap, TrendingUp,
   CheckCircle2, Clock, DollarSign, BarChart3, Star,
@@ -14,7 +16,7 @@ import {
   Layers, PanelRight, Megaphone,
   Upload, Image, Info, MapPin, User, Hash,
   ArrowRightLeft, Truck, Users, RefreshCw, Globe,
-  Activity, Receipt, Clipboard,
+  Activity, Receipt, Clipboard, CircleDollarSign,
 } from 'lucide-react';
 import { AreaChart, Area, PieChart, Pie, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
 import { generateBridgeResponse, generateMarketingCampaignPlan, generateConnectAnalysis, generatePricingAnalysis, isGeminiAvailable } from '../utils/gemini';
@@ -44,7 +46,7 @@ const DEFAULT_PRODUCTS = {
    KNOWLEDGE BASE — 55 articles covering all Dutchie product areas
    ═══════════════════════════════════════════════════════════════════ */
 
-export const KNOWLEDGE_BASE = [
+const KNOWLEDGE_BASE = [
   // ── Ecommerce: Menu & Products ──
   { id: 'kb-001', title: 'How to Set Up Your Menu', category: 'Ecommerce', tags: ['menu', 'setup', 'products', 'categories', 'items', 'getting started'], navPath: 'Dutchie Admin > Menu Management', steps: ['Click "Add Category" to create sections (Flower, Edibles, Concentrates, Pre-Rolls)', 'Click "Add Product" within each category', 'Set pricing (rec/med), THC/CBD %, strain type, weight options', 'Upload product images (up to 5 per product)', 'Bulk-import via CSV under Menu > Import', 'Click "Publish" to make changes live'], content: 'Navigate to Dutchie Admin > Menu Management. Click "Add Category" to create sections (Flower, Edibles, Concentrates, Pre-Rolls, etc.), then "Add Product" within each category. For each product, set pricing (rec and med if applicable), THC/CBD percentages, strain type (Indica/Sativa/Hybrid), weight options, and upload product images. You can bulk-import products via CSV under Menu > Import. Publish changes to make them live on your storefront. Tip: organize categories in the order customers browse — Flower first, then Edibles, then Concentrates.', relatedArticles: ['kb-002', 'kb-003', 'kb-004'] },
   { id: 'kb-002', title: 'Adding & Optimizing Product Images', category: 'Ecommerce', tags: ['images', 'photos', 'product', 'upload', 'picture', 'optimization'], navPath: 'Menu > [Product] > Edit', steps: ['Select a product and click "Edit"', 'Use image uploader — up to 5 photos per product', 'Recommended: 1000x1000px, JPEG/PNG, under 2MB', 'Drag to reorder — first image shows on menu grid', 'Use lifestyle/close-up shots (40% better conversion)'], content: 'Navigate to Menu > select a product > click "Edit." Use the image uploader to add up to 5 photos per product. Recommended specs: 1000x1000px, JPEG or PNG, under 2MB. Best practices: use lifestyle shots and close-ups rather than packaging-only photos (these convert 40% better). Ensure good lighting and a clean background. Products with 3+ images see 25% more add-to-carts. You can drag to reorder — the first image is what shows on the menu grid.', relatedArticles: ['kb-001'] },
@@ -473,7 +475,7 @@ function Section({ title, icon: Icon, iconColor, children, defaultOpen = true, b
         {badge && <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: (badgeColor || 'var(--color-accent-blue)') + '18', color: badgeColor || 'var(--color-accent-blue)' }}>{badge}</span>}
         <div className="ml-auto">{open ? <ChevronUp className="w-4 h-4 text-text-secondary" /> : <ChevronDown className="w-4 h-4 text-text-secondary" />}</div>
       </button>
-      {open && <div className="px-5 pb-4 border-t border-surface-border pt-3">{children}</div>}
+      {open && <div className="px-5 pb-4 border-t border-surface-divider pt-3">{children}</div>}
     </div>
   );
 }
@@ -515,7 +517,7 @@ export function KBArticleCard({ article }) {
         </div>
       </button>
       {expanded && (
-        <div className="px-4 pb-4 border-t border-surface-border pt-3 animate-fade-in space-y-3">
+        <div className="px-4 pb-4 border-t border-surface-divider pt-3 animate-fade-in space-y-3">
           {/* Navigation path breadcrumb */}
           {article.navPath && (
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-card border border-surface-border">
@@ -551,7 +553,7 @@ export function KBArticleCard({ article }) {
 
           {/* Related articles */}
           {article.relatedArticles.length > 0 && (
-            <div className="pt-2 border-t border-surface-border/50">
+            <div className="pt-2 border-t border-surface-divider/50">
               <p className="text-[10px] text-text-muted mb-1.5">Related articles</p>
               <div className="flex gap-1.5 flex-wrap">
                 {article.relatedArticles.map(id => {
@@ -1208,7 +1210,7 @@ function ProductCatalogPanel({ products, onToggle, isOpen, onClose }) {
 
   return (
     <div className={`fixed top-0 right-0 h-full w-80 bg-surface-bg border-l border-surface-border z-40 transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} flex flex-col shadow-2xl`}>
-      <div className="flex items-center justify-between px-5 py-4 border-b border-surface-border">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-surface-divider">
         <div className="flex items-center gap-2">
           <Layers className="w-4 h-4 text-accent-blue" />
           <h2 className="text-sm font-semibold text-text-primary">Product Suite</h2>
@@ -1267,7 +1269,7 @@ function ProductCatalogPanel({ products, onToggle, isOpen, onClose }) {
         </div>
       </div>
       {/* footer */}
-      <div className="p-4 border-t border-surface-border">
+      <div className="p-4 border-t border-surface-divider">
         <div className="bg-surface-card rounded-lg p-3 border border-surface-border">
           <div className="flex items-center gap-2 mb-1">
             <Shield className="w-3.5 h-3.5 text-accent-green" />
@@ -1420,7 +1422,7 @@ function ReviewFeed({ data }) {
   return (
     <div className="bg-surface-bg rounded-xl border border-surface-border overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-surface-border flex items-center justify-between">
+      <div className="px-5 py-4 border-b border-surface-divider flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-purple/20 to-accent-blue/20 flex items-center justify-center">
             <MessageSquare className="w-4.5 h-4.5 text-accent-purple" />
@@ -1438,7 +1440,7 @@ function ReviewFeed({ data }) {
       </div>
 
       {/* Quick stats bar */}
-      <div className="flex items-center gap-4 px-5 py-2.5 border-b border-surface-border bg-surface-card/50">
+      <div className="flex items-center gap-4 px-5 py-2.5 border-b border-surface-divider bg-surface-card/50">
         <span className="text-[10px] text-accent-green">{data.dist.positive} positive</span>
         <span className="text-[10px] text-accent-gold">{data.dist.neutral} neutral</span>
         <span className="text-[10px] text-accent-red">{data.dist.negative} negative</span>
@@ -1446,7 +1448,7 @@ function ReviewFeed({ data }) {
       </div>
 
       {/* Reviews */}
-      <div className="divide-y divide-surface-border">
+      <div className="divide-y divide-surface-divider">
         {visible.length === 0 && (
           <div className="px-5 py-8 text-center">
             <p className="text-sm text-text-secondary">No reviews match those filters.</p>
@@ -1458,7 +1460,7 @@ function ReviewFeed({ data }) {
       </div>
 
       {/* Show more / footer */}
-      <div className="px-5 py-3 border-t border-surface-border flex items-center justify-between">
+      <div className="px-5 py-3 border-t border-surface-divider flex items-center justify-between">
         {data.reviews.length > 5 && (
           <button
             onClick={() => setShowAll(!showAll)}
@@ -1663,7 +1665,7 @@ function SentimentSnippet({ data }) {
   return (
     <div className="bg-surface-bg rounded-xl border border-surface-border overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-surface-border flex items-center justify-between">
+      <div className="px-5 py-4 border-b border-surface-divider flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-green/20 to-accent-blue/20 flex items-center justify-center">
             <Star className="w-4.5 h-4.5 text-accent-green" />
@@ -1679,7 +1681,7 @@ function SentimentSnippet({ data }) {
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-4 gap-4 border-b border-surface-border px-4 py-1">
+      <div className="grid grid-cols-4 gap-4 border-b border-surface-divider px-4 py-1">
         {[
           { label: 'Avg Score', value: data.avg.toFixed(1), sub: `${data.normalizedScore}/100`, color: gaugeColor },
           { label: 'NPS', value: data.nps > 0 ? `+${data.nps}` : `${data.nps}`, sub: data.nps >= 30 ? 'Great' : data.nps >= 0 ? 'OK' : 'Needs Work', color: npsColor },
@@ -1695,7 +1697,7 @@ function SentimentSnippet({ data }) {
       </div>
 
       {/* Donut + Category breakdown side by side */}
-      <div className="grid grid-cols-2 gap-4 border-b border-surface-border px-4">
+      <div className="grid grid-cols-2 gap-4 border-b border-surface-divider px-4">
         {/* Donut */}
         <div className="px-4 py-3">
           <p className="text-[10px] font-medium text-text-secondary mb-1">Distribution</p>
@@ -1747,7 +1749,7 @@ function SentimentSnippet({ data }) {
       </div>
 
       {/* Trend chart */}
-      <div className="px-5 pt-3 pb-2 border-b border-surface-border">
+      <div className="px-5 pt-3 pb-2 border-b border-surface-divider">
         <p className="text-[10px] font-medium text-text-secondary mb-2">Sentiment Trend — 12 Months</p>
         <div style={{ width: '100%', height: 130 }}>
           <ResponsiveContainer>
@@ -1758,7 +1760,7 @@ function SentimentSnippet({ data }) {
                   <stop offset="100%" stopColor="var(--color-accent-green)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-border)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-divider)" vertical={false} />
               <XAxis dataKey="month" tick={{ fill: 'var(--color-text-muted)', fontSize: 9 }} axisLine={false} tickLine={false} tickFormatter={v => v.split(' ')[0]} />
               <YAxis domain={[-1, 1]} tick={{ fill: 'var(--color-text-muted)', fontSize: 9 }} axisLine={false} tickLine={false} />
               <Tooltip content={<CustomTooltip />} />
@@ -1817,7 +1819,7 @@ function SentimentSnippet({ data }) {
                       <span className="text-accent-gold">{brand.neutral}→</span>
                       <span className="text-accent-red">{brand.negative}↓</span>
                     </div>
-                    <div className="w-16 h-2 rounded-full overflow-hidden bg-surface-hover flex">
+                    <div className="w-16 h-2 rounded-full overflow-hidden bg-surface-border flex">
                       <div style={{ width: `${Math.round((brand.positive / brand.count) * 100)}%`, backgroundColor: 'var(--color-accent-green)' }} />
                       <div style={{ width: `${Math.round((brand.neutral / brand.count) * 100)}%`, backgroundColor: 'var(--color-accent-gold)' }} />
                       <div style={{ width: `${Math.round((brand.negative / brand.count) * 100)}%`, backgroundColor: 'var(--color-accent-red)' }} />
@@ -1901,7 +1903,7 @@ function SentimentSnippet({ data }) {
                     <div key={brand.name} className="flex items-center gap-3 bg-surface-card rounded-lg px-3 py-2 border border-surface-border">
                       <p className="text-xs font-medium text-text-primary flex-1">{brand.name}</p>
                       <span className="text-[10px] font-medium" style={{ color: brandColor }}>{brand.normalized}/100</span>
-                      <div className="w-16 h-2 rounded-full overflow-hidden bg-surface-hover flex">
+                      <div className="w-16 h-2 rounded-full overflow-hidden bg-surface-border flex">
                         <div style={{ width: `${Math.round((brand.positive / brand.count) * 100)}%`, backgroundColor: 'var(--color-accent-green)' }} />
                         <div style={{ width: `${Math.round((brand.neutral / brand.count) * 100)}%`, backgroundColor: 'var(--color-accent-gold)' }} />
                         <div style={{ width: `${Math.round((brand.negative / brand.count) * 100)}%`, backgroundColor: 'var(--color-accent-red)' }} />
@@ -1916,7 +1918,7 @@ function SentimentSnippet({ data }) {
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-2.5 border-t border-surface-border flex items-center justify-between">
+      <div className="px-5 py-2.5 border-t border-surface-divider flex items-center justify-between">
         <p className="text-[10px] text-text-muted">Data from Dutchie AI · {data.total} reviews analyzed</p>
         <div className="flex items-center gap-1 text-[10px] text-text-muted">
           <Eye className="w-3 h-3" /> Live
@@ -2062,7 +2064,7 @@ function ReportSnippet({ data }) {
   return (
     <div className="bg-surface-bg rounded-xl border border-surface-border overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 border-b border-surface-border flex items-center justify-between">
+      <div className="px-5 py-4 border-b border-surface-divider flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-green/20 flex items-center justify-center">
             <BarChart3 className="w-4.5 h-4.5 text-accent-blue" />
@@ -2080,7 +2082,7 @@ function ReportSnippet({ data }) {
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-4 gap-4 border-b border-surface-border px-4 py-1">
+      <div className="grid grid-cols-4 gap-4 border-b border-surface-divider px-4 py-1">
         {[
           { label: 'Revenue', value: formatCurrency(data.revenue), icon: DollarSign, color: 'var(--color-accent-green)' },
           { label: 'Orders', value: data.orders.toLocaleString(), icon: ShoppingCart, color: 'var(--color-accent-blue)' },
@@ -2113,7 +2115,7 @@ function ReportSnippet({ data }) {
                   <stop offset="100%" stopColor="var(--color-text-muted)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-border)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-surface-divider)" vertical={false} />
               <XAxis dataKey="label" tick={{ fill: 'var(--color-text-muted)', fontSize: 10 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--color-text-muted)', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v)} />
               <Tooltip content={<CustomTooltip />} />
@@ -2236,7 +2238,7 @@ function ReportSnippet({ data }) {
       </div>
 
       {/* Footer */}
-      <div className="px-5 py-2.5 border-t border-surface-border flex items-center justify-between">
+      <div className="px-5 py-2.5 border-t border-surface-divider flex items-center justify-between">
         <p className="text-[10px] text-text-muted">Data as of today, 10:00 AM EST · Powered by Dutchie AI</p>
         <div className="flex items-center gap-1 text-[10px] text-text-muted">
           <Eye className="w-3 h-3" /> Live
@@ -2260,7 +2262,7 @@ function ThinkingIndicator({ status }) {
 
   return (
     <div className="flex items-start gap-3 animate-fade-in">
-      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #1A1710 0%, #2A2318 100%)', border: '1px solid rgba(212,160,58,0.2)' }}>
+      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-surface-bg)', border: '1px solid color-mix(in srgb, var(--color-accent-gold) 20%, transparent)' }}>
         <NexusIcon size={16} />
       </div>
       <div className="bg-surface-card border border-surface-border rounded-2xl rounded-tl-sm px-4 py-3 min-w-[220px]">
@@ -2293,54 +2295,36 @@ const SUGGESTIONS = [
   {
     key: 'menu',
     label: 'How do I set up my menu?',
+    description: 'Step-by-step guide to configuring your Dutchie menu and product catalog',
     icon: BookOpen,
-    gradient: 'from-cyan-600/20 to-blue-600/20',
-    border: 'hover:border-cyan-500/40',
+    accentVar: '--color-accent-blue',
     tag: 'Support',
     tagColor: 'var(--color-accent-blue)',
   },
   {
-    key: 'whitelabel',
-    label: 'I want my own branding on the App Store',
-    icon: Smartphone,
-    gradient: 'from-pink-600/20 to-rose-600/20',
-    border: 'hover:border-pink-500/40',
-    tag: 'Upgrade',
-    tagColor: '#EC4899',
-  },
-  {
-    key: 'fees',
-    label: 'Credit card fees are too high',
-    icon: CreditCard,
-    gradient: 'from-amber-600/20 to-orange-600/20',
-    border: 'hover:border-amber-500/40',
-    tag: 'Fintech',
-    tagColor: 'var(--color-accent-gold)',
-  },
-  {
-    key: 'bug',
-    label: 'The checkout button is lagging',
-    icon: Bug,
-    gradient: 'from-red-600/20 to-orange-600/20',
-    border: 'hover:border-red-500/40',
-    tag: 'Report',
-    tagColor: 'var(--color-accent-red)',
-  },
-  {
     key: 'campaign',
     label: 'Run a marketing campaign',
+    description: 'Launch targeted SMS, email, or push campaigns to drive traffic and sales',
     icon: Megaphone,
-    gradient: 'from-green-600/20 to-emerald-600/20',
-    border: 'hover:border-green-500/40',
+    accentVar: '--color-accent-green',
     tag: 'Marketing',
     tagColor: 'var(--color-accent-green)',
   },
   {
+    key: 'pricing',
+    label: 'Am I priced competitively?',
+    description: 'Compare your prices against regional market averages by category',
+    icon: CircleDollarSign,
+    accentVar: '--color-accent-gold',
+    tag: 'Pricing',
+    tagColor: 'var(--color-accent-gold)',
+  },
+  {
     key: 'inventory',
     label: 'Show me a plan to reorder out-of-stock inventory',
+    description: 'Scan stockouts and generate optimal reorder quantities with cost estimates',
     icon: Package,
-    gradient: 'from-blue-600/20 to-indigo-600/20',
-    border: 'hover:border-blue-500/40',
+    accentVar: '--color-accent-blue',
     tag: 'Connect',
     tagColor: 'var(--color-accent-blue)',
   },
@@ -2566,11 +2550,11 @@ function NexusActionCard({ data, compact = false }) {
           <div className="overflow-x-auto rounded-xl border border-surface-border/60">
             <table className={`w-full ${compact ? 'text-[10px]' : 'text-[11px]'}`}>
               <thead><tr style={{ background: `${data.color}08` }}>
-                {data.cols.map((c, i) => <th key={i} className={`${compact ? 'px-2.5 py-1.5' : 'px-3 py-2'} text-left text-[9px] font-bold text-text-secondary uppercase tracking-wider whitespace-nowrap`}>{c}</th>)}
+                {data.cols.map((c, i) => <th key={i} className={`${compact ? 'px-2.5 py-1.5' : 'px-3 py-2'} text-left text-xs font-semibold text-text-secondary uppercase tracking-wider whitespace-nowrap`}>{c}</th>)}
               </tr></thead>
               <tbody>
                 {displayRows.map((row, ri) => (
-                  <tr key={ri} className="border-t border-surface-border/30 hover:bg-surface-hover/50 transition-colors">
+                  <tr key={ri} className="border-t border-surface-divider/30 hover:bg-surface-hover/50 transition-colors">
                     {row.map((cell, ci) => {
                       const color = sc(cell);
                       return <td key={ci} className={`${compact ? 'px-2.5 py-1.5' : 'px-3 py-2'} whitespace-nowrap`}>{color
@@ -2632,6 +2616,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
   const navigate = useNavigate();
   const { selectedPersona, isCEO, isVP, isRegional, isStoreMgr, isCompliance } = usePersona();
   const { selectionLabel } = useStores();
+  const { startThinking, stopThinking } = useNexusState();
   const [products, setProducts] = useState(DEFAULT_PRODUCTS);
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState([]);
@@ -2639,6 +2624,13 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
   const [catalogOpen, setCatalogOpen] = useState(false);
   const bottomRef = useRef(null);
   const chatAreaRef = useRef(null);
+
+  // Sync NexusIcon thinking state with thinkingStatus
+  useEffect(() => {
+    if (thinkingStatus) startThinking();
+    else stopThinking();
+    return () => stopThinking();
+  }, [thinkingStatus, startThinking, stopThinking]);
 
   const activateProduct = (key) => {
     setProducts(prev => ({
@@ -2783,48 +2775,56 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
         data: { userMessage: text, kbResults: results.slice(0, 3) },
       }]);
     } else if (intent.lane === 'pricing') {
-      // Cross-agent: generate pricing analysis
+      // Cross-agent: show fallback pricing view immediately, then enhance with AI
       setThinkingStatus('Analyzing your pricing data...');
-      let analysis = null;
-      if (isGeminiAvailable()) {
-        setThinkingStatus('Comparing prices to market in your region...');
-        analysis = await generatePricingAnalysis(text);
-      }
+      const lower = text.toLowerCase();
+      let viewType = 'market_comparison';
+      if (/cost|gross|net|overview/.test(lower)) viewType = 'price_cost_overview';
+      else if (/discount|promo|coupon|roi|waste|review/.test(lower)) viewType = 'discount_review';
+      else if (/scenario|what.if|model|simul/.test(lower)) viewType = 'price_scenarios';
+      else if (/change.*price|raise.*price|lower.*price|adjust.*price|optimiz.*price/.test(lower)) viewType = 'change_prices';
+      else if (/create.*discount|new.*discount|add.*discount|launch.*discount/.test(lower)) viewType = 'create_discount';
+
+      // Show fallback immediately
+      await new Promise(r => setTimeout(r, 400));
       setThinkingStatus(null);
-      if (analysis && analysis.title) {
-        const wf = analysis.workflowType || 'market_comparison';
-        setMessages(prev => [...prev, {
-          role: 'agent',
-          text: `I've completed a **${analysis.title}** analysis. Here's a detailed breakdown:`,
-          component: `pricing_${wf}`,
-          data: analysis,
-        }]);
-      } else {
-        // Fallback to keyword-matched preset
-        const lower = text.toLowerCase();
-        let viewType = 'market_comparison';
-        if (/cost|gross|net|overview/.test(lower)) viewType = 'price_cost_overview';
-        else if (/discount|promo|coupon|roi|waste|review/.test(lower)) viewType = 'discount_review';
-        else if (/scenario|what.if|model|simul/.test(lower)) viewType = 'price_scenarios';
-        else if (/change.*price|raise.*price|lower.*price|adjust.*price|optimiz.*price/.test(lower)) viewType = 'change_prices';
-        else if (/create.*discount|new.*discount|add.*discount|launch.*discount/.test(lower)) viewType = 'create_discount';
-        setMessages(prev => [...prev, {
-          role: 'agent',
-          text: `Here's a pricing analysis based on your current data:`,
-          component: `pricing_${viewType}`,
-          data: null,
-        }]);
+      setMessages(prev => [...prev, {
+        role: 'agent',
+        text: `Here's a pricing analysis based on your current data:`,
+        component: `pricing_${viewType}`,
+        data: null,
+      }]);
+
+      // Then try to enhance with AI in background
+      if (isGeminiAvailable()) {
+        try {
+          const analysis = await generatePricingAnalysis(text);
+          if (analysis && analysis.title) {
+            const wf = analysis.workflowType || 'market_comparison';
+            setMessages(prev => {
+              const updated = [...prev];
+              const lastAgentIdx = updated.map(m => m.role).lastIndexOf('agent');
+              if (lastAgentIdx >= 0) {
+                updated[lastAgentIdx] = {
+                  role: 'agent',
+                  text: `I've completed a **${analysis.title}** analysis. Here's a detailed breakdown:`,
+                  component: `pricing_${wf}`,
+                  data: analysis,
+                };
+              }
+              return updated;
+            });
+          }
+        } catch (err) {
+          console.error('[CustomerBridge] Pricing AI enhancement failed:', err);
+        }
       }
     } else if (intent.lane === 'marketing') {
-      // Cross-agent: generate marketing campaign plan
+      // Cross-agent: show fallback campaign immediately, then enhance with AI
       setThinkingStatus('Building your campaign plan...');
       let campaignData = null;
-      if (isGeminiAvailable()) {
-        setThinkingStatus('Analyzing customer segments and crafting campaign...');
-        campaignData = await generateMarketingCampaignPlan(text);
-      }
-      // Fallback to preset if Gemini failed — match user intent to the right preset
-      if (!campaignData || !campaignData.title) {
+      // Build fallback campaign immediately (no waiting for AI)
+      {
         const lower = text.toLowerCase();
         let presetKey = null;
         if (lower.includes('win back') || lower.includes('lapsed') || lower.includes('re-engage') || lower.includes('inactive') || lower.includes('churn') || lower.includes('dormant')) presetKey = 'winback';
@@ -2997,6 +2997,8 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
           };
         }
       }
+      // Show fallback campaign immediately
+      await new Promise(r => setTimeout(r, 400));
       setThinkingStatus(null);
       setMessages(prev => [...prev, {
         role: 'agent',
@@ -3004,35 +3006,71 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
         component: 'campaign',
         data: campaignData,
       }]);
-    } else if (intent.lane === 'connect') {
-      // Cross-agent: generate connect/inventory analysis
-      setThinkingStatus('Reviewing inventory levels...');
-      let analysis = null;
+
+      // Then try to enhance with AI in background
       if (isGeminiAvailable()) {
-        setThinkingStatus('Analyzing stock data and vendor options...');
-        analysis = await generateConnectAnalysis(text);
+        try {
+          const aiCampaign = await generateMarketingCampaignPlan(text);
+          if (aiCampaign && aiCampaign.title) {
+            setMessages(prev => {
+              const updated = [...prev];
+              const lastAgentIdx = updated.map(m => m.role).lastIndexOf('agent');
+              if (lastAgentIdx >= 0) {
+                updated[lastAgentIdx] = {
+                  role: 'agent',
+                  text: `I've analyzed your customer data and built a comprehensive **${aiCampaign.title}** campaign. Here's the full plan:`,
+                  component: 'campaign',
+                  data: aiCampaign,
+                };
+              }
+              return updated;
+            });
+          }
+        } catch (err) {
+          console.error('[CustomerBridge] Marketing AI enhancement failed:', err);
+        }
       }
+    } else if (intent.lane === 'connect') {
+      // Cross-agent: show fallback connect view immediately, then enhance with AI
+      setThinkingStatus('Reviewing inventory levels...');
+      const lower = text.toLowerCase();
+      let viewType = 'recommendations';
+      if (lower.includes('reorder') || lower.includes('out of stock') || lower.includes('restock') || lower.includes('low stock') || lower.includes('replenish')) viewType = 'reorder';
+      else if (lower.includes('new product') || lower.includes('explore') || lower.includes('discover') || lower.includes('trending') || lower.includes('catalog')) viewType = 'explore';
+
+      // Show fallback immediately
+      await new Promise(r => setTimeout(r, 400));
       setThinkingStatus(null);
-      if (analysis && analysis.title) {
-        const wf = analysis.workflowType || 'recommendations';
-        setMessages(prev => [...prev, {
-          role: 'agent',
-          text: `I've completed a **${analysis.title}** analysis based on your inventory data. Here's a detailed breakdown:`,
-          component: wf,
-          data: analysis,
-        }]);
-      } else {
-        // Fallback to preset view when Gemini fails
-        const lower = text.toLowerCase();
-        let viewType = 'recommendations';
-        if (lower.includes('reorder') || lower.includes('out of stock') || lower.includes('restock') || lower.includes('low stock') || lower.includes('replenish')) viewType = 'reorder';
-        else if (lower.includes('new product') || lower.includes('explore') || lower.includes('discover') || lower.includes('trending') || lower.includes('catalog')) viewType = 'explore';
-        setMessages(prev => [...prev, {
-          role: 'agent',
-          text: `I've analyzed your inventory data. Here's a detailed breakdown with actionable recommendations:`,
-          component: viewType,
-          data: null,
-        }]);
+      setMessages(prev => [...prev, {
+        role: 'agent',
+        text: `I've analyzed your inventory data. Here's a detailed breakdown with actionable recommendations:`,
+        component: viewType,
+        data: null,
+      }]);
+
+      // Then try to enhance with AI in background
+      if (isGeminiAvailable()) {
+        try {
+          const analysis = await generateConnectAnalysis(text);
+          if (analysis && analysis.title) {
+            const wf = analysis.workflowType || 'recommendations';
+            setMessages(prev => {
+              const updated = [...prev];
+              const lastAgentIdx = updated.map(m => m.role).lastIndexOf('agent');
+              if (lastAgentIdx >= 0) {
+                updated[lastAgentIdx] = {
+                  role: 'agent',
+                  text: `I've completed a **${analysis.title}** analysis based on your inventory data. Here's a detailed breakdown:`,
+                  component: wf,
+                  data: analysis,
+                };
+              }
+              return updated;
+            });
+          }
+        } catch (err) {
+          console.error('[CustomerBridge] Connect AI enhancement failed:', err);
+        }
       }
     } else if (intent.lane === 'reporting') {
       setThinkingStatus('Pulling performance data...');
@@ -3209,6 +3247,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
   };
 
   useEffect(() => {
+    if (messages.length === 0) return;
     if (compact && chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     } else {
@@ -3220,40 +3259,40 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
   const totalCount = Object.keys(products).length;
 
   const COMPACT_SUGGESTIONS = [
-    { key: 'ecomm_customize', label: 'Help me customize my ecomm look and feel', icon: Eye, gradient: 'from-amber-600/20 to-orange-600/20', border: 'hover:border-amber-500/40', tag: 'Support', tagColor: 'var(--color-accent-gold)' },
-    { key: 'menu_boards', label: 'Add Menu Boards to my Account', icon: Monitor, gradient: 'from-pink-600/20 to-rose-600/20', border: 'hover:border-pink-500/40', tag: 'Upgrade', tagColor: '#EC4899' },
-    { key: 'winback', label: 'Set up a marketing win back campaign', icon: Megaphone, gradient: 'from-green-600/20 to-emerald-600/20', border: 'hover:border-green-500/40', tag: 'Marketing', tagColor: 'var(--color-accent-green)' },
+    { key: 'ecomm_customize', label: 'Help me customize my ecomm look and feel', description: 'Storefront branding, colors, and layout options', icon: Eye, accentVar: '--color-accent-gold', tag: 'Support', tagColor: 'var(--color-accent-gold)' },
+    { key: 'menu_boards', label: 'Add Menu Boards to my Account', description: 'Digital in-store displays with dynamic pricing', icon: Monitor, accentVar: '--color-accent-purple', tag: 'Upgrade', tagColor: 'var(--color-accent-purple)' },
+    { key: 'winback', label: 'Set up a marketing win back campaign', description: 'Re-engage lapsed customers with targeted offers', icon: Megaphone, accentVar: '--color-accent-green', tag: 'Marketing', tagColor: 'var(--color-accent-green)' },
   ];
   const NEXUS_SUGGESTIONS_BY_PERSONA = {
     ceo: [
-      { key: 'flash', label: 'How are all stores doing today vs last week?', icon: Activity, gradient: 'from-amber-600/20 to-yellow-600/20', border: 'hover:border-amber-500/40', tag: 'Sales', tagColor: 'var(--color-accent-gold)' },
-      { key: 'reorder', label: 'Reorder out of stock and low stock items', icon: Package, gradient: 'from-red-600/20 to-rose-600/20', border: 'hover:border-red-500/40', tag: 'Reorder', tagColor: 'var(--color-accent-red)' },
-      { key: 'brands', label: 'What are our top selling brands right now?', icon: Star, gradient: 'from-blue-600/20 to-cyan-600/20', border: 'hover:border-blue-500/40', tag: 'Brands', tagColor: 'var(--color-accent-blue)' },
-      { key: 'winback', label: 'Run a win-back campaign for lapsed customers', icon: Megaphone, gradient: 'from-green-600/20 to-emerald-600/20', border: 'hover:border-green-500/40', tag: 'Campaign', tagColor: 'var(--color-accent-green)' },
+      { key: 'flash', label: 'How are all stores doing today vs last week?', description: 'Cross-store sales performance snapshot', icon: Activity, accentVar: '--color-accent-gold', tag: 'Sales', tagColor: 'var(--color-accent-gold)' },
+      { key: 'reorder', label: 'Reorder out of stock and low stock items', description: 'Generate optimal reorder quantities', icon: Package, accentVar: '--color-accent-red', tag: 'Reorder', tagColor: 'var(--color-accent-red)' },
+      { key: 'brands', label: 'What are our top selling brands right now?', description: 'Brand performance rankings by revenue', icon: Star, accentVar: '--color-accent-blue', tag: 'Brands', tagColor: 'var(--color-accent-blue)' },
+      { key: 'winback', label: 'Run a win-back campaign for lapsed customers', description: 'Automated re-engagement with escalating offers', icon: Megaphone, accentVar: '--color-accent-green', tag: 'Campaign', tagColor: 'var(--color-accent-green)' },
     ],
     vp_retail: [
-      { key: 'rebalance', label: 'Reorder out of stock and low inventory items', icon: Package, gradient: 'from-red-600/20 to-rose-600/20', border: 'hover:border-red-500/40', tag: 'Reorder', tagColor: 'var(--color-accent-red)' },
-      { key: 'pricing', label: 'Compare our prices vs market average', icon: DollarSign, gradient: 'from-amber-600/20 to-yellow-600/20', border: 'hover:border-amber-500/40', tag: 'Pricing', tagColor: 'var(--color-accent-gold)' },
-      { key: 'winback', label: 'Launch a marketing campaign to win back lapsed customers', icon: Megaphone, gradient: 'from-green-600/20 to-emerald-600/20', border: 'hover:border-green-500/40', tag: 'Campaign', tagColor: 'var(--color-accent-green)' },
-      { key: 'performance', label: 'How are all stores doing on sales this week?', icon: BarChart3, gradient: 'from-blue-600/20 to-cyan-600/20', border: 'hover:border-blue-500/40', tag: 'Sales', tagColor: 'var(--color-accent-blue)' },
+      { key: 'rebalance', label: 'Reorder out of stock and low inventory items', description: 'Generate optimal reorder quantities', icon: Package, accentVar: '--color-accent-red', tag: 'Reorder', tagColor: 'var(--color-accent-red)' },
+      { key: 'pricing', label: 'Compare our prices vs market average', description: 'Regional market price comparison', icon: DollarSign, accentVar: '--color-accent-gold', tag: 'Pricing', tagColor: 'var(--color-accent-gold)' },
+      { key: 'winback', label: 'Launch a marketing campaign to win back lapsed customers', description: 'Automated re-engagement with escalating offers', icon: Megaphone, accentVar: '--color-accent-green', tag: 'Campaign', tagColor: 'var(--color-accent-green)' },
+      { key: 'performance', label: 'How are all stores doing on sales this week?', description: 'Cross-store sales performance snapshot', icon: BarChart3, accentVar: '--color-accent-blue', tag: 'Sales', tagColor: 'var(--color-accent-blue)' },
     ],
     regional_mgr: [
-      { key: 'transfers', label: 'Any transfers waiting on my approval?', icon: ArrowRightLeft, gradient: 'from-amber-600/20 to-yellow-600/20', border: 'hover:border-amber-500/40', tag: 'Transfers', tagColor: 'var(--color-accent-gold)', action: 'transfers' },
-      { key: 'close', label: 'Any cash variances from last night?', icon: FileText, gradient: 'from-green-600/20 to-emerald-600/20', border: 'hover:border-green-500/40', tag: 'Close', tagColor: 'var(--color-accent-green)', action: 'close' },
-      { key: 'delivery', label: 'What deliveries are coming in today?', icon: Truck, gradient: 'from-blue-600/20 to-cyan-600/20', border: 'hover:border-blue-500/40', tag: 'Receiving', tagColor: 'var(--color-accent-blue)', action: 'delivery' },
-      { key: 'labor', label: 'Are any stores short-staffed or running OT?', icon: Users, gradient: 'from-purple-600/20 to-violet-600/20', border: 'hover:border-purple-500/40', tag: 'Staffing', tagColor: 'var(--color-accent-purple)', action: 'labor' },
+      { key: 'transfers', label: 'Any transfers waiting on my approval?', description: 'Pending inter-store transfer requests', icon: ArrowRightLeft, accentVar: '--color-accent-gold', tag: 'Transfers', tagColor: 'var(--color-accent-gold)', action: 'transfers' },
+      { key: 'close', label: 'Any cash variances from last night?', description: 'End-of-day reconciliation discrepancies', icon: FileText, accentVar: '--color-accent-green', tag: 'Close', tagColor: 'var(--color-accent-green)', action: 'close' },
+      { key: 'delivery', label: 'What deliveries are coming in today?', description: 'Inbound shipment schedule and tracking', icon: Truck, accentVar: '--color-accent-blue', tag: 'Receiving', tagColor: 'var(--color-accent-blue)', action: 'delivery' },
+      { key: 'labor', label: 'Are any stores short-staffed or running OT?', description: 'Staffing gaps and overtime alerts', icon: Users, accentVar: '--color-accent-purple', tag: 'Staffing', tagColor: 'var(--color-accent-purple)', action: 'labor' },
     ],
     store_mgr: [
-      { key: 'reorder', label: 'Reorder out of stock and low stock items', icon: Package, gradient: 'from-red-600/20 to-rose-600/20', border: 'hover:border-red-500/40', tag: 'Reorder', tagColor: 'var(--color-accent-red)' },
-      { key: 'winback', label: 'Run a win-back campaign for lapsed customers', icon: Megaphone, gradient: 'from-green-600/20 to-emerald-600/20', border: 'hover:border-green-500/40', tag: 'Campaign', tagColor: 'var(--color-accent-green)' },
-      { key: 'budtender', label: 'How are my budtenders doing on sales today?', icon: Users, gradient: 'from-amber-600/20 to-yellow-600/20', border: 'hover:border-amber-500/40', tag: 'Staff', tagColor: 'var(--color-accent-gold)' },
-      { key: 'sentiment', label: 'What are customers saying about us?', icon: Star, gradient: 'from-purple-600/20 to-violet-600/20', border: 'hover:border-purple-500/40', tag: 'Reviews', tagColor: 'var(--color-accent-purple)' },
+      { key: 'reorder', label: 'Reorder out of stock and low stock items', description: 'Generate optimal reorder quantities', icon: Package, accentVar: '--color-accent-red', tag: 'Reorder', tagColor: 'var(--color-accent-red)' },
+      { key: 'winback', label: 'Run a win-back campaign for lapsed customers', description: 'Automated re-engagement with escalating offers', icon: Megaphone, accentVar: '--color-accent-green', tag: 'Campaign', tagColor: 'var(--color-accent-green)' },
+      { key: 'budtender', label: 'How are my budtenders doing on sales today?', description: 'Employee sales performance rankings', icon: Users, accentVar: '--color-accent-gold', tag: 'Staff', tagColor: 'var(--color-accent-gold)' },
+      { key: 'sentiment', label: 'What are customers saying about us?', description: 'Review sentiment analysis and NPS trends', icon: Star, accentVar: '--color-accent-purple', tag: 'Reviews', tagColor: 'var(--color-accent-purple)' },
     ],
     compliance: [
-      { key: 'metrc', label: 'Any packages stuck or needing METRC tags?', icon: Package, gradient: 'from-red-600/20 to-rose-600/20', border: 'hover:border-red-500/40', tag: 'METRC', tagColor: 'var(--color-accent-red)', action: 'metrc_queue' },
-      { key: 'discrepancy', label: 'Any inventory counts off that need fixing?', icon: AlertTriangle, gradient: 'from-amber-600/20 to-yellow-600/20', border: 'hover:border-amber-500/40', tag: 'Exceptions', tagColor: 'var(--color-accent-gold)', action: 'discrepancy' },
-      { key: 'audit', label: 'Are we ready for the upcoming inspection?', icon: Eye, gradient: 'from-blue-600/20 to-cyan-600/20', border: 'hover:border-blue-500/40', tag: 'Readiness', tagColor: 'var(--color-accent-blue)', action: 'audit' },
-      { key: 'regulatory', label: 'What new rules are coming down the pipe?', icon: Clipboard, gradient: 'from-purple-600/20 to-violet-600/20', border: 'hover:border-purple-500/40', tag: 'Upcoming', tagColor: 'var(--color-accent-purple)', action: 'regulatory' },
+      { key: 'metrc', label: 'Any packages stuck or needing METRC tags?', description: 'METRC sync status and tag exceptions', icon: Package, accentVar: '--color-accent-red', tag: 'METRC', tagColor: 'var(--color-accent-red)', action: 'metrc_queue' },
+      { key: 'discrepancy', label: 'Any inventory counts off that need fixing?', description: 'Count discrepancies requiring reconciliation', icon: AlertTriangle, accentVar: '--color-accent-gold', tag: 'Exceptions', tagColor: 'var(--color-accent-gold)', action: 'discrepancy' },
+      { key: 'audit', label: 'Are we ready for the upcoming inspection?', description: 'Compliance readiness checklist and gaps', icon: Eye, accentVar: '--color-accent-blue', tag: 'Readiness', tagColor: 'var(--color-accent-blue)', action: 'audit' },
+      { key: 'regulatory', label: 'What new rules are coming down the pipe?', description: 'Upcoming regulatory changes by state', icon: Clipboard, accentVar: '--color-accent-purple', tag: 'Upcoming', tagColor: 'var(--color-accent-purple)', action: 'regulatory' },
     ],
   };
   const NEXUS_SUGGESTIONS = NEXUS_SUGGESTIONS_BY_PERSONA[selectedPersona?.id] || NEXUS_SUGGESTIONS_BY_PERSONA.store_mgr;
@@ -3261,15 +3300,15 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
   const compactSuggestions = nexusOverlay ? NEXUS_SUGGESTIONS : compact ? COMPACT_SUGGESTIONS : SUGGESTIONS;
 
   return (
-    <div className={`flex flex-col ${nexusOverlay ? 'h-full' : compact ? 'h-[420px]' : 'max-w-5xl mx-auto h-[calc(100vh-10rem)]'}`}>
+    <div className={`flex flex-col ${nexusOverlay ? 'h-full' : compact ? 'h-[420px]' : 'max-w-4xl mx-auto flex-1 min-h-0 animate-fade-in'}`}>
       {/* header — hidden in nexusOverlay mode (NexusChat provides its own) */}
-      {!nexusOverlay && <div className={`flex items-center gap-3 ${compact ? 'mb-3' : 'mb-6'}`}>
-        <div className={`${compact ? 'w-8 h-8' : 'w-10 h-10'} rounded-xl flex items-center justify-center shadow-lg`} style={{ background: 'linear-gradient(135deg, #1A1710 0%, #2A2318 100%)', boxShadow: '0 0 20px rgba(212,160,58,0.3), inset 0 1px 0 rgba(212,160,58,0.15)', border: '1px solid rgba(212,160,58,0.2)' }}>
-          <NexusIcon size={compact ? 16 : 22} />
+      {!nexusOverlay && <div className={`flex items-center gap-2.5 ${compact ? 'mb-3' : 'mb-4'}`}>
+        <div className={`${compact ? 'w-8 h-8' : 'w-8 h-8'} rounded-lg bg-accent-green/10 flex items-center justify-center`}>
+          <NexusIcon size={compact ? 16 : 16} />
         </div>
         <div>
-          <h1 className={`${compact ? 'text-base' : 'text-xl'} font-bold text-text-primary`}>{compact ? 'Dex' : 'Dex'}</h1>
-          <p className="text-xs text-text-secondary">{compact ? `Ask anything — ${selectedPersona?.shortLabel || 'Store Mgr'}` : `AI-Powered Retail Operations Agent — ${selectedPersona?.label || 'Store Manager'}`}</p>
+          <h1 className={`${compact ? 'text-base' : 'text-xl lg:text-2xl'} font-bold text-text-primary`}>{compact ? 'Dex' : 'Dex'}</h1>
+          <p className="text-xs text-text-secondary">{compact ? `Ask anything — ${selectedPersona?.shortLabel || 'Store Mgr'}` : <><span className="hidden lg:inline">{`Retail Operations — Dutchie AI · ${selectedPersona?.label || 'Store Manager'}`}</span><span className="lg:hidden">Dutchie AI</span></>}</p>
         </div>
         <div className="ml-auto flex items-center gap-2">
           {compact ? (
@@ -3282,19 +3321,16 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
             </button>
           ) : (
             <>
-              {/* product suite toggle */}
+              {/* product suite toggle — hidden on mobile */}
               <button
                 onClick={() => setCatalogOpen(!catalogOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-card border border-surface-border hover:border-surface-border transition-colors text-xs text-text-secondary hover:text-text-primary"
+                className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-card border border-surface-border hover:border-surface-border transition-colors text-xs text-text-secondary hover:text-text-primary"
               >
                 <Layers className="w-3.5 h-3.5 text-accent-blue" />
                 <span className="font-medium">{activeCount}/{totalCount} Products</span>
                 <PanelRight className="w-3.5 h-3.5" />
               </button>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent-green/10 border border-accent-green/20">
-                <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse" />
-                <span className="text-xs text-accent-green font-medium">Online</span>
-              </div>
+
             </>
           )}
         </div>
@@ -3304,28 +3340,14 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
       <div ref={chatAreaRef} className="flex-1 overflow-y-auto space-y-4 mb-4 pr-1">
         {/* welcome — minimal centered spiral */}
         {messages.length === 0 && !thinkingStatus && !compact && (
-          <div className="flex flex-col items-center justify-center py-10" style={{ minHeight: nexusOverlay ? 'calc(100% - 2rem)' : 320 }}>
-            <div className="w-[72px] h-[72px] rounded-[22px] flex items-center justify-center mb-6" style={{ background: 'linear-gradient(135deg, #1A1710 0%, #2A2318 100%)', boxShadow: '0 0 24px rgba(212,160,58,0.15), 0 0 8px rgba(212,160,58,0.1)', border: '1px solid rgba(212,160,58,0.2)' }}>
-              <NexusIcon size={36} />
+          <div className="flex flex-col items-center justify-center py-6" style={{ minHeight: nexusOverlay ? 'calc(100% - 2rem)' : 240 }}>
+            <div className="w-[60px] h-[60px] rounded-[18px] flex items-center justify-center mb-4" style={{ background: 'var(--color-surface-bg)', boxShadow: '0 0 24px color-mix(in srgb, var(--color-accent-gold) 15%, transparent), 0 0 8px color-mix(in srgb, var(--color-accent-gold) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--color-accent-gold) 20%, transparent)' }}>
+              <NexusIcon size={30} />
             </div>
-            <h2 className="text-[26px] font-bold text-text-primary mb-2 text-center">How can I help?</h2>
-            <p className="text-[13px] text-text-secondary text-center max-w-[420px] mb-5 leading-relaxed">
+            <h2 className="text-xl font-bold text-text-primary mb-1.5 text-center">How can I help?</h2>
+            <p className="text-[13px] text-text-secondary text-center max-w-[420px] mb-4 leading-relaxed">
               Powered by 55+ knowledge articles, 11 agent lanes, and real-time data across all your stores.
             </p>
-            <div className="flex flex-wrap justify-center gap-2 max-w-[480px]">
-              {[
-                { label: 'Inventory', color: 'var(--color-accent-blue)' },
-                { label: 'Campaigns', color: 'var(--color-accent-green)' },
-                { label: 'Pricing', color: 'var(--color-accent-gold)' },
-                { label: 'Reporting', color: 'var(--color-accent-blue)' },
-                { label: 'Support', color: 'var(--color-accent-purple)' },
-                { label: 'Compliance', color: '#E880A0' },
-              ].map(t => (
-                <span key={t.label} className="text-[11px] font-medium px-2.5 py-1 rounded-full" style={{ color: t.color, background: `${t.color}12`, border: `1px solid ${t.color}20` }}>
-                  {t.label}
-                </span>
-              ))}
-            </div>
           </div>
         )}
 
@@ -3333,7 +3355,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
         {messages.map((msg, i) => (
           <div key={i} className={`flex items-start gap-3 animate-fade-in ${msg.role === 'user' ? 'justify-end' : ''}`}>
             {msg.role === 'agent' && (
-              <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'linear-gradient(135deg, #1A1710 0%, #2A2318 100%)', border: '1px solid rgba(212,160,58,0.2)' }}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'var(--color-surface-bg)', border: '1px solid color-mix(in srgb, var(--color-accent-gold) 20%, transparent)' }}>
                 <NexusIcon size={16} />
               </div>
             )}
@@ -3343,7 +3365,9 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
                   ? 'bg-accent-gold/15 border border-accent-gold/20 text-text-primary rounded-tr-sm'
                   : 'bg-surface-card/80 border border-surface-border/60 text-text-primary rounded-tl-sm'
               }`}>
-                {msg.text}
+                {msg.text.split(/(\*\*[^*]+\*\*)/g).map((part, pi) =>
+                  part.startsWith('**') ? <strong key={pi} className="font-semibold">{part.slice(2, -2)}</strong> : part
+                )}
               </div>
               {/* component rendering */}
               {msg.component === 'kb' && msg.data && (
@@ -3495,24 +3519,23 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
             {!nexusOverlay && !mobileCompact && <p className={`text-xs text-text-secondary mb-3 ${compact ? '' : 'ml-11'}`}>{compact ? 'Try asking:' : 'Try one of these scenarios'}</p>}
             <div className={`grid stagger-grid ${mobileCompact ? 'grid-cols-2 gap-2' : nexusOverlay ? 'grid-cols-2 sm:grid-cols-3 gap-3' : compact ? 'grid-cols-1 gap-2' : 'grid-cols-1 sm:grid-cols-2 gap-3 ml-11'}`}>
               {compactSuggestions.map((s) => (
-                <button
-                  key={s.key}
-                  onClick={() => handleSuggestionClick(s.key)}
-                  className={`group text-left bg-surface-card border border-surface-border ${s.border} rounded-xl ${mobileCompact ? 'p-2.5' : compact ? 'p-3' : 'p-4'} transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]`}
-                >
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <div className={`${mobileCompact ? 'w-5 h-5' : compact ? 'w-6 h-6' : 'w-8 h-8'} rounded-lg bg-gradient-to-br ${s.gradient} flex items-center justify-center`}>
-                      <s.icon className={`${mobileCompact ? 'w-2.5 h-2.5' : compact ? 'w-3 h-3' : 'w-4 h-4'} text-text-primary`} />
+                <TiltCard key={s.key}>
+                  <button
+                    onClick={() => handleSuggestionClick(s.key)}
+                    className={`group text-left w-full rounded-xl border border-surface-border bg-surface-card hover:border-accent-green/30 ${mobileCompact ? 'p-2.5' : compact ? 'p-3' : 'p-4'} transition-all hover:brightness-110 active:scale-[0.98]`}
+                  >
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <div className={`${mobileCompact ? 'w-5 h-5' : compact ? 'w-6 h-6' : 'w-8 h-8'} rounded-lg flex items-center justify-center`} style={{ background: `color-mix(in srgb, var(${s.accentVar}) 12%, transparent)` }}>
+                        <s.icon className={`${mobileCompact ? 'w-2.5 h-2.5' : compact ? 'w-3 h-3' : 'w-4 h-4'} text-text-primary`} />
+                      </div>
+                      <span className={`${mobileCompact ? 'text-[10px]' : 'text-[9px]'} font-semibold px-1.5 py-0.5 rounded-full border border-surface-border`} style={{ color: s.tagColor }}>{s.tag}</span>
                     </div>
-                    <span className={`${mobileCompact ? 'text-[8px]' : 'text-[9px]'} font-semibold px-1.5 py-0.5 rounded-full border border-white/10`} style={{ color: s.tagColor }}>{s.tag}</span>
-                  </div>
-                  <p className={`${mobileCompact ? 'text-[11px] leading-tight' : compact ? 'text-xs' : 'text-sm'} font-medium text-text-primary`}>"{s.label}"</p>
-                  {!compact && !mobileCompact && (
-                    <div className={`flex items-center gap-1 mt-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity ${nexusOverlay ? 'text-accent-green' : 'text-accent-gold'}`}>
-                      <Zap className="w-3 h-3" /> Ask <ChevronRight className="w-3 h-3" />
-                    </div>
-                  )}
-                </button>
+                    <p className={`${mobileCompact ? 'text-[11px] leading-tight' : compact ? 'text-[13px] font-medium' : 'text-[13px] font-medium'} text-text-primary`}>{s.label}</p>
+                    {s.description && !compact && !mobileCompact && (
+                      <p className="text-[11px] text-text-secondary mt-0.5 leading-relaxed">{s.description}</p>
+                    )}
+                  </button>
+                </TiltCard>
               ))}
             </div>
           </div>
@@ -3522,9 +3545,9 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
       </div>
 
       {/* input bar */}
-      <form onSubmit={handleSubmit} className="sticky bottom-0 pb-2">
-        <div className={`flex items-center bg-surface-card border border-surface-border rounded-2xl ${mobileCompact ? 'gap-2 px-3 py-1.5' : compact ? 'gap-3 px-3 py-2' : 'gap-3 px-4 py-3'} focus-within:border-accent-gold/40 transition-colors`}>
-          <Search className={`${mobileCompact || compact ? 'w-4 h-4' : 'w-5 h-5'} text-text-secondary flex-shrink-0`} />
+      <form onSubmit={handleSubmit} className="sticky bottom-0 pb-16 lg:pb-2">
+        <div className={`nexus-input-glass flex items-center bg-surface-card border border-surface-border rounded-2xl ${mobileCompact ? 'gap-2 px-3 py-1.5' : compact ? 'gap-3 px-3 py-2' : 'gap-3 px-5 py-3.5 shadow-card'} focus-within:border-accent-green/50 transition-all duration-200`}>
+          {(mobileCompact || compact) && <Search className={`${mobileCompact ? 'w-4 h-4' : 'w-4 h-4'} text-text-secondary flex-shrink-0`} />}
           <input
             type="text"
             value={inputValue}
@@ -3537,7 +3560,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
           <button
             type="submit"
             disabled={!inputValue.trim() || thinkingStatus !== null}
-            className={`${mobileCompact ? 'w-7 h-7' : compact ? 'w-7 h-7' : 'w-8 h-8'} rounded-lg bg-accent-gold/80 flex items-center justify-center text-white disabled:opacity-30 hover:bg-accent-gold transition-colors disabled:hover:bg-accent-gold/80`}
+            className={`${mobileCompact ? 'w-7 h-7' : compact ? 'w-7 h-7' : 'w-9 h-9'} ${mobileCompact || compact ? 'rounded-lg bg-accent-gold/80 hover:bg-accent-gold disabled:hover:bg-accent-gold/80' : 'rounded-xl bg-accent-green hover:brightness-110 disabled:hover:bg-accent-green shadow-sm'} flex items-center justify-center text-white disabled:opacity-30 transition-all`}
           >
             <Send className={`${compact || mobileCompact ? 'w-3.5 h-3.5' : 'w-4 h-4'}`} />
           </button>
@@ -3559,7 +3582,7 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
       {/* Product Catalog Sidebar — full mode only, not in nexus overlay */}
       {!compact && !nexusOverlay && (
         <>
-          <ProductCatalogPanel
+          {catalogOpen && <ProductCatalogPanel
             products={products}
             onToggle={(key) => {
               const prod = products[key];
@@ -3568,22 +3591,12 @@ export default function CustomerBridge({ compact = false, nexusOverlay = false, 
             }}
             isOpen={catalogOpen}
             onClose={() => setCatalogOpen(false)}
-          />
+          />}
           {catalogOpen && (
             <div className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm" onClick={() => setCatalogOpen(false)} />
           )}
         </>
       )}
-
-      <style>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(8px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
-        }
-      `}</style>
     </div>
   );
 }

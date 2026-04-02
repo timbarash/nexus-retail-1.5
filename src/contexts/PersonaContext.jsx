@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useMemo } from 'react';
 import { Building2, Globe, MapPin, Store, Shield } from 'lucide-react';
 
 const PERSONAS = [

@@ -2,6 +2,8 @@ import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 
 const ThemeContext = createContext(null);
 
+const themes = ['dark', 'light', 'classic'];
+
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     try {
@@ -34,6 +36,12 @@ export function ThemeProvider({ children }) {
     return () => mq.removeEventListener('change', handler);
   }, [theme]);
 
+  const cycleTheme = () => {
+    const currentIndex = themes.indexOf(theme);
+    const next = themes[(currentIndex + 1) % themes.length];
+    setTheme(next);
+  };
+
   const value = useMemo(() => {
     let applied = theme;
     if (theme === 'system') {
@@ -42,7 +50,9 @@ export function ThemeProvider({ children }) {
     return {
       theme,
       setTheme,
+      cycleTheme,
       isDark: applied === 'dark',
+      isClassic: applied === 'classic',
     };
   }, [theme]);
 

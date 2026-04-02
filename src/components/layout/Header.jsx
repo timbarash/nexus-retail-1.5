@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, Search, ChevronDown, Sun, Moon } from 'lucide-react';
+import { Menu, ChevronDown, Sun, Moon, Monitor, ClipboardList } from 'lucide-react';
 import StoreSelector from './StoreSelector';
 import DateRangeSelector from './DateRangeSelector';
+import ActionLogDrawer from '../common/ActionLogDrawer';
+import NexusIcon from '../NexusIcon';
 import { usePersona } from '../../contexts/PersonaContext';
 import { useStores } from '../../contexts/StoreContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useActionLog } from '../../contexts/ActionLogContext';
 
 function PersonaSwitcher() {
   const { personas, selectedPersona, setSelectedPersona } = usePersona();
@@ -43,7 +46,7 @@ function PersonaSwitcher() {
 
       {open && (
         <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-surface-border bg-surface-card shadow-2xl z-50 overflow-hidden" style={{ animation: 'fadeIn 0.15s ease-out' }}>
-          <div className="px-4 py-2.5 border-b border-surface-border">
+          <div className="px-4 py-2.5 border-b border-surface-divider">
             <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">Switch Persona</p>
           </div>
           <div className="py-1">
@@ -88,56 +91,95 @@ function PersonaSwitcher() {
 }
 
 function ThemeToggle() {
-  const { isDark, setTheme } = useTheme();
+  const { theme, cycleTheme } = useTheme();
+
+  const label = theme === 'dark'
+    ? 'Switch to light mode'
+    : theme === 'light'
+    ? 'Switch to classic mode'
+    : 'Switch to dark mode';
+
+  const icon = theme === 'dark'
+    ? <Moon className="w-4 h-4" />
+    : theme === 'light'
+    ? <Sun className="w-4 h-4" />
+    : <Monitor className="w-4 h-4" />;
+
   return (
     <button
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="p-1.5 rounded-lg border border-surface-border text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors"
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      onClick={cycleTheme}
+      className="p-1.5 rounded-lg border border-surface-border text-text-secondary hover:text-text-primary hover:bg-surface-hover transition-colors"
+      aria-label={label}
     >
-      {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+      {icon}
     </button>
   );
 }
 
 export default function Header({ onMenuClick }) {
+  const [actionLogOpen, setActionLogOpen] = useState(false);
+  const { actions } = useActionLog();
+  const { theme, cycleTheme } = useTheme();
+
   return (
-    <header className="sticky top-0 z-30 bg-surface-card/80 backdrop-blur-md border-b border-surface-border">
-      <div className="flex items-center justify-between px-4 py-3 lg:px-6">
-        {/* Left: hamburger + title */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
-            aria-label="Open sidebar"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          <div>
-            <h1 className="text-lg font-semibold text-text-primary leading-tight">
-              Dutchie AI
-            </h1>
-            <p className="text-xs text-text-muted hidden sm:block">
-              Ascend — Retail Operations
-            </p>
-          </div>
-        </div>
-        {/* Right: persona + theme + search + date + store */}
+    <>
+      {/* Mobile top bar — minimal, only shows below lg */}
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-surface-card border-b border-surface-border sticky top-0 z-30">
         <div className="flex items-center gap-2">
-          <PersonaSwitcher />
-          <ThemeToggle />
-          <button
-            onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-surface-border text-text-muted hover:text-text-secondary hover:bg-surface-hover transition-colors"
-          >
-            <Search className="w-3.5 h-3.5" />
-            <span className="text-xs">Search</span>
-            <kbd className="text-[10px] bg-surface-muted border border-surface-border rounded px-1 py-0.5 ml-1 font-mono text-text-muted">&#8984;K</kbd>
+          <NexusIcon size={18} />
+          <span className="text-sm font-semibold text-text-primary">nexus</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={cycleTheme} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors">
+            {theme === 'dark' ? <Moon className="w-4 h-4" /> : theme === 'light' ? <Sun className="w-4 h-4" /> : <Monitor className="w-4 h-4" />}
           </button>
-          <DateRangeSelector />
-          <StoreSelector />
+          <button onClick={() => setActionLogOpen(true)} className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors relative">
+            <ClipboardList className="w-4 h-4" />
+            {actions.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent-blue text-white text-[9px] font-bold flex items-center justify-center">
+                {actions.length > 9 ? '9+' : actions.length}
+              </span>
+            )}
+          </button>
         </div>
       </div>
-    </header>
+
+      {/* Desktop header — hidden on mobile */}
+      <header className="hidden lg:block sticky top-0 z-30 bg-surface-card/80 backdrop-blur-md border-b border-surface-divider">
+        <div className="flex items-center justify-between px-4 py-3 lg:px-6">
+          {/* Left: hamburger (only shows below lg, but header itself is hidden below lg now) */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onMenuClick}
+              className="lg:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-hover hover:text-text-primary transition-colors"
+              aria-label="Open sidebar"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
+          {/* Right: persona + theme + date + store + action log */}
+          <div className="flex items-center gap-2">
+            <PersonaSwitcher />
+            <ThemeToggle />
+            <button
+              onClick={() => setActionLogOpen(true)}
+              className="relative p-1.5 rounded-lg border border-surface-border text-text-secondary hover:text-text-primary hover:bg-surface-hover transition-colors"
+              aria-label="Action log"
+            >
+              <ClipboardList className="w-4 h-4" />
+              {actions.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent-blue text-white text-[9px] font-bold flex items-center justify-center">
+                  {actions.length > 9 ? '9+' : actions.length}
+                </span>
+              )}
+            </button>
+            <DateRangeSelector />
+            <StoreSelector />
+          </div>
+        </div>
+      </header>
+
+      <ActionLogDrawer open={actionLogOpen} onClose={() => setActionLogOpen(false)} />
+    </>
   );
 }
